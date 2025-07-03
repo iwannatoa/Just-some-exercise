@@ -1,0 +1,20 @@
+// --
+// Copyright © 2016-2025 Patrick Zhang.
+// All Rights Reserved.
+// --
+@use "../app.scss";
+
+.nav-group {
+  @apply flex flex-col shadow-2xl w-full h-full border-l-orange-200;
+
+  .nav-button {
+    // border-bottom: 2px solid #666;
+    margin-bottom: 1px;
+    box-shadow: 0 1px 3px black;
+    width: 100%;
+    @apply bg-blue-50 px-4 py-2 text-blue-400 hover:bg-blue-100;
+    &.active {
+      @apply bg-blue-200;
+    }
+  }
+}

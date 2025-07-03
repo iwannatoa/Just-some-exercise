@@ -1,0 +1,32 @@
+// --
+// Copyright © 2016-2025 Patrick Zhang.
+// All Rights Reserved.
+// --
+@use "../app.scss";
+.sudoku-board {
+  @apply flex flex-col w-fit m-auto;
+  .sudoku-row {
+    display: flex;
+    flex: non;
+    flex-direction: row;
+    justify-items: center;
+    &:nth-child(3n) {
+      @apply border-b-4 border-b-blue-500;
+    }
+    &:first-child {
+      @apply border-t-4 border-t-blue-500;
+    }
+    .sudoku-cell {
+      @apply size-10 border-2 border-blue-300 text-center leading-9;
+      &:nth-child(3n) {
+        @apply border-r-4 border-r-blue-500;
+      }
+      &:first-child {
+        @apply border-l-4 border-l-blue-500;
+      }
+      &:focus-visible {
+        @apply outline-0;
+      }
+    }
+  }
+}
