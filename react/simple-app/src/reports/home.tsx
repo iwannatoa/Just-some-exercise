@@ -81,10 +81,19 @@ const ReportHome: FC<ReportHomeBean> = prop => {
       data: [],
     } as KeyValueData,
   );
+
+  const end = new Date();
+  const start = new Date();
+  start.setFullYear(start.getFullYear() - 1);
   const handleDataZoom = useCallback((event: any) => {
+    console.log(event);
     if (event.batch) {
       const val = event.batch[event.batch.length - 1];
-      setData({ start: val.startValue, end: val.endValue });
+      if (val.startValue && val.endValue) {
+        setData({ start: val.startValue, end: val.endValue });
+      } else {
+        setData({ start: start.getTime(), end: end.getTime() });
+      }
     }
   }, []);
   const eventDict: Record<string, Function> = {
@@ -104,9 +113,6 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
-    const start = new Date();
-    start.setFullYear(start.getFullYear() - 1);
-    const end = new Date();
     getData(start, end, 100)
       .then(data => {
         if (!isMounted.current) return;
