@@ -3,6 +3,7 @@
  * All Rights Reserved.
  */
 import {
+  useCallback,
   useEffect,
   useMemo,
   useReducer,
@@ -80,13 +81,14 @@ const ReportHome: FC<ReportHomeBean> = prop => {
       data: [],
     } as KeyValueData,
   );
+  const handleDataZoom = useCallback((event: any) => {
+    if (event.batch) {
+      const val = event.batch[event.batch.length - 1];
+      setData({ start: val.startValue, end: val.endValue });
+    }
+  }, []);
   const eventDict: Record<string, Function> = {
-    dataZoom: (event: any) => {
-      if (event.batch) {
-        const val = event.batch[event.batch.length - 1];
-        setData({ start: val.startValue, end: val.endValue });
-      }
-    },
+    dataZoom: handleDataZoom,
   };
   const memoriezed = useMemo(() => {
     return (
@@ -98,7 +100,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
         onEvents={eventDict}
       />
     );
-  }, [gridOptions, pageStatus]);
+  }, [gridOptions, pageStatus, eventDict]);
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
