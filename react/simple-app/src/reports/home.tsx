@@ -130,28 +130,30 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   }, []);
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col p-4 min-h-0">
       <h1 className="flex-none">Here we come</h1>
       {memoriezed}
-      {(data.data.length > 0 && (
-        <table className="w-full overflow-scroll text-center flex-1 bg-gray-200">
-          <tr key="header" className="bg-gray-400">
-            <th key="time">Time</th>
-            {data.categories.map(type => (
-              <th key={type}>{type}</th>
-            ))}
-          </tr>
-          {data.data.map((row, i) => (
-            <tr key={i}>
-              <td key={`${i}_time`}>{new Date(row.time).toDateString()}</td>
+      <div className="flex flex-row">
+        {(data.data.length > 0 && (
+          <table className="flex-1 text-center bg-gray-50 min-h-0 overflow-auto">
+            <tr key="header" className="bg-gray-200 shadow-2xl shadow-gray-300">
+              <th key="time">Time</th>
               {data.categories.map(type => (
-                <td key={`${i}_${type}`}>{row[type]}</td>
+                <th key={type}>{type}</th>
               ))}
             </tr>
-          ))}
-        </table>
-      )) ||
-        (pageStatus === "Failed" && <div>Load data failed</div>)}
+            {data.data.map((row, i) => (
+              <tr key={i}>
+                <td key={`${i}_time`}>{new Date(row.time).toDateString()}</td>
+                {data.categories.map(type => (
+                  <td key={`${i}_${type}`}>{row[type]}</td>
+                ))}
+              </tr>
+            ))}
+          </table>
+        )) ||
+          (pageStatus === "Failed" && <div>Load data failed</div>)}
+      </div>
     </div>
   );
 };
