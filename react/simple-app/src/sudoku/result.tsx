@@ -16,7 +16,8 @@ const SudokuResult: FC<SudokuResultProps> = props => {
   const arr: (number | "")[][] = Array.from({ length: 9 }, () =>
     new Array(9).fill(""),
   );
-  const numbers: (number | "")[][] = location.state?.data ?? arr;
+  const numbers: (number | "")[][] =
+    location.state?.data ?? props.numbers ?? arr;
   const [answer, setAnswer] = useState(arr);
 
   function solveSudoku(board: (number | "")[][]): void {
@@ -110,6 +111,7 @@ const SudokuResult: FC<SudokuResultProps> = props => {
   };
 
   useEffect(() => {
+    console.log("useEffect");
     const newAnswer = numbers.map(row => row.map(col => col));
     solveSudoku(newAnswer);
     setAnswer(newAnswer);
@@ -121,15 +123,15 @@ const SudokuResult: FC<SudokuResultProps> = props => {
       <div className="sudoku-board">
         {answer.map((row, i) => (
           <div key={`row_${i}`} className="sudoku-row">
-            {row.map((cell, j) => (
-              <div key={`col_${i * 9 + j}`} className="sudoku-cell">
-                {cell}
+            {row.map((col, j) => (
+              <div key={`col_${i}_${j}`} className="sudoku-cell">
+                {col}
               </div>
             ))}
           </div>
         ))}
       </div>
-      <div>
+      <div className="flex flex-row justify-items-center m-auto mt-2 w-fit space-x-4">
         <button onClick={back}>Back</button>
       </div>
     </div>

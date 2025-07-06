@@ -2,7 +2,7 @@
  * Copyright © 2016-2025 Patrick Zhang.
  * All Rights Reserved.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./sudoku.scss";
 import { useNavigate, useNavigation } from "react-router";
 
@@ -24,10 +24,12 @@ function SudokuInput() {
       newNumber[row][col] = "";
     }
     setNumbers(newNumber);
+    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(numbers));
   };
 
   const clear = () => {
     setNumbers(arr);
+    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(numbers));
   };
 
   useEffect(() => {
@@ -42,7 +44,6 @@ function SudokuInput() {
   }, []);
 
   const submit = () => {
-    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(numbers));
     navigate("/sudoku/result", { state: { data: [...numbers] } });
   };
 
@@ -54,7 +55,7 @@ function SudokuInput() {
           <div key={`row_${i}`} className="sudoku-row">
             {row.map((col, j) => (
               <input
-                key={`col_${i * 9 + j}`}
+                key={`col_${i}_${j}`}
                 className="sudoku-cell"
                 type="text"
                 value={col}
@@ -64,7 +65,7 @@ function SudokuInput() {
           </div>
         ))}
       </div>
-      <div>
+      <div className="flex flex-row justify-items-center m-auto mt-2 w-fit space-x-4">
         <button onClick={clear}>Clear</button>
         <button onClick={submit}>Submit</button>
       </div>

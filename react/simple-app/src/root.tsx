@@ -27,6 +27,14 @@ export const links: Route.LinksFunction = () => [
   //     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   //   },
 ];
+import type { Route as RouteInfo } from "./+types/root";
+
+export function meta({}: RouteInfo.MetaArgs) {
+  return [
+    { title: "New React Router App" },
+    { name: "description", content: "Welcome to React Router!" },
+  ];
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -49,7 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <div className="flex flex-col h-lvh">
-      <header className="flex-none w-full bg-white border-b-gray-500 h-20 shadow-md"></header>
+      <div className="flex-none w-full bg-white border-b-gray-500 h-20 shadow-md"></div>
       <div className="flex flex-1 flex-row">
         <div className="flex flex-none md:w-40 w-20">
           <NavBar></NavBar>
@@ -90,6 +98,4 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </main>
   );
 }
-
-
 
