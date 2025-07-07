@@ -86,7 +86,6 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   const start = new Date();
   start.setFullYear(start.getFullYear() - 1);
   const handleDataZoom = useCallback((event: any) => {
-    console.log(event);
     if (event.batch) {
       const val = event.batch[event.batch.length - 1];
       if (val.startValue && val.endValue) {
