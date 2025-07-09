@@ -3,3 +3,5 @@
  * All Rights Reserved.
  */
 @import './base.css';
+@import "@nuxt/ui";
+@import 'tailwindcss';

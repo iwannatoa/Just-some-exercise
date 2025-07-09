@@ -1,37 +1,79 @@
+<!--
+ ~ Copyright © 2016-2025 Patrick Zhang.
+ ~ All Rights Reserved.
+ -->
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import { ref } from 'vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router';
+import { onMounted, ref, watch } from 'vue';
+import useUserStore from './stores/user';
 
-let showBanner = ref(localStorage.getItem('showBanner') ?? true)
+const showBanner = ref(!(localStorage.getItem('showBanner') === 'false' && true));
+const userStore = useUserStore();
+const userInfo = ref(userStore.userInfo);
+const router = useRouter();
 
 function closeBanner() {
-  showBanner.value = false
-  localStorage.setItem('showBanner', 'false')
+  showBanner.value = false;
+  localStorage.setItem('showBanner', 'false');
 }
+
+function logout() {
+  console.log('logout');
+  userStore.logout();
+  localStorage.clear();
+  router.replace('/login');
+}
+
+watch(userInfo, () => {
+  if (!userInfo.value.isLogin) logout();
+});
+
+onMounted(() => {
+  if (!userInfo.value.isLogin) logout();
+});
+
+//provide a button to logout
 </script>
 
 <template>
-  <div class="app-container">
-    <div v-if="showBanner" class="banner">
-      <div class="flex">
-        <HelloWorld class="flex-1 text-center content-center" msg="You did it!" />
-        <button class="flex-none p-2" @click="closeBanner()">x</button>
-      </div>
-    </div>
-    <div class="masthead">
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="40" height="40" />
-    </div>
+  <div class="h-[100vh]">
+    <UApp>
+      <template v-if="userInfo.isLogin">
+        <div class="app-container">
+          <div v-if="showBanner" class="banner">
+            <div class="flex">
+              <span class="flex-1 text-center content-center" >Welcome {{ userInfo.user?.name }} !</span>
+              <button class="flex-none p-2" @click="closeBanner()">x</button>
+            </div>
+          </div>
+          <div class="masthead">
+            <div class="flex">
+              <img class="logo" src="@/assets/logo.svg" width="40" height="40" />
+              <div class="flex-1"></div>
+              <span class="p-4 text-primary-50">{{ userInfo.user?.name }}</span>
+              <u-button @click="logout()" color="primary" class="text-primary-50">logout</u-button>
+            </div>
+          </div>
 
-    <div class="sidenav">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-    <div class="content">
-      <RouterView />
-    </div>
+          <div class="sidenav">
+            <nav>
+              <div class="nav-item">
+                <RouterLink to="/">Home</RouterLink>
+              </div>
+              <div class="nav-item">
+                <RouterLink to="/about">About</RouterLink>
+              </div>
+            </nav>
+          </div>
+          <div class="content">
+            <RouterView />
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <RouterView />
+      </template>
+    </UApp>
   </div>
 </template>
 
@@ -62,10 +104,18 @@ function closeBanner() {
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
-    color: #636363;
     border-right: 1px solid #e1e1e1;
     background-color: #fff;
     width: fit-content;
+    background-color: $primary_color;
+
+    .nav-item {
+      @apply min-w-40  p-4;
+      color: var(--ui-color-primary-50);
+      &:has(.router-link-active) {
+        border-left: 6px solid var(--ui-secondary);
+      }
+    }
   }
 }
 .content {

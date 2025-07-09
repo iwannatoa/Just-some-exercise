@@ -44,11 +44,11 @@ interface Entitlement {
 }
 
 const db = new Dexie('simpleTaskDataBase') as Dexie & {
-  user: EntityTable<User>;
-  task: EntityTable<Task>;
-  taskHistory: EntityTable<TaskHistory>;
-  workflow: EntityTable<Workflow>;
-  entitlement: EntityTable<Entitlement>;
+  user: EntityTable<User, 'id'>;
+  task: EntityTable<Task, 'id'>;
+  taskHistory: EntityTable<TaskHistory, 'id'>;
+  workflow: EntityTable<Workflow, 'id'>;
+  entitlement: EntityTable<Entitlement, 'id'>;
 };
 
 db.version(1).stores({

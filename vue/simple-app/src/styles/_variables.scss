@@ -2,4 +2,5 @@
 // Copyright © 2016-2025 Patrick Zhang.
 // All Rights Reserved.
 // --
-$primary_color: #1defc6;
+$primary-color: var(--ui-primary);
+$text-color-white:  var(--ui-color-primary-50);
