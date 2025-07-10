@@ -59,7 +59,7 @@ onMounted(() => {
       </div>
       <URadioGroup v-model="selected" :items="items" value-key="id" variant="card" color="primary"></URadioGroup>
       <div class="flex justify-center mt-4">
-        <UButton @click="login()" :disabled="!selected" size="xl">Login</UButton>
+        <UButton block @click="login()" :disabled="!selected" size="xl">Login</UButton>
       </div>
     </MyLoading>
   </div>

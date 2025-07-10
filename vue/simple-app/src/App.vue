@@ -58,7 +58,7 @@ onMounted(() => {
           <div class="sidenav">
             <nav>
               <div class="nav-item">
-                <RouterLink to="/">Home</RouterLink>
+                <RouterLink to="/task">Tasks</RouterLink>
               </div>
               <div class="nav-item">
                 <RouterLink to="/about">About</RouterLink>

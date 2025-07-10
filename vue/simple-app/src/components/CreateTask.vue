@@ -8,6 +8,7 @@ import useUserStore from '@/stores/user';
 import { reactive, ref, watchEffect } from 'vue';
 import { from, Subject, takeUntil } from 'rxjs';
 import type { FormSubmitEvent } from '@nuxt/ui';
+import { useObservable } from '@vueuse/rxjs';
 const currentUser = useUserStore().userInfo.user!;
 const workflows = ref<Workflow[]>([]);
 const users = ref<{ id: number; label: string }[]>([]);

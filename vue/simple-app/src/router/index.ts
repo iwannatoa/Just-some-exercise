@@ -3,15 +3,21 @@
  * All Rights Reserved.
  */
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import HomeView from '../views/tasks/HomeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/', name: 'home', redirect: '/task' },
     {
-      path: '/',
-      name: 'home',
+      path: '/task',
+      name: 'taskHome',
       component: HomeView,
+    },
+    {
+      path: '/task/:id',
+      name: 'taskDetail',
+      component: () => import('../views/tasks/DetailView.vue'),
     },
     {
       path: '/login',

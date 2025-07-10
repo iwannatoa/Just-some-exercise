@@ -5,30 +5,53 @@
 <script setup lang="ts">
 import { db, type Task, type TaskHistory } from '@/stores/db';
 import useUserStore from '@/stores/user';
-import { onMounted, ref } from 'vue';
+import type { TableColumn, TableRow } from '@nuxt/ui';
+import { ref, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
 
 const user = useUserStore().userInfo.user!;
+const router = useRouter();
 const data = ref<Task[]>([]);
 
 const isModalOpen = ref(false);
+const columns: TableColumn<Task>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Task Name',
+  },
+  {
+    accessorKey: 'category',
+    header: 'Category',
+  },
+  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'assigneeId', header: 'Assignee' },
+];
+watchEffect(() => {
+  loadTable();
+});
 
-onMounted(async () => {
-  const taskList = await db.task.filter((item) => item.assigneeId === user.id).toArray();
+async function loadTable() {
+  const taskList = await db.task.where('assigneeId').equals(user.id!).toArray();
   console.log(taskList);
   data.value = taskList;
-});
+}
 
 async function submit(event: Task) {
   const createdTaskId = await db.task.add(event);
-  const history:TaskHistory = {
+  const history: TaskHistory = {
     type: 'Create',
     userId: user.id!,
     taskId: createdTaskId!,
     detail: 'Create task',
-    operateTime: Date.now()
-  } ;
+    operateTime: Date.now(),
+  };
   await db.taskHistory.add(history);
   isModalOpen.value = false;
+  await loadTable();
+}
+
+function selectRow(row: TableRow<Task>) {
+  router.push('/task/' + row.original.id);
 }
 </script>
 
@@ -37,15 +60,15 @@ async function submit(event: Task) {
     <div class="flex flex-row justify-between mb-4">
       <h1 class="text-2xl">Default Board</h1>
       <UModal v-model:open="isModalOpen" title="Create a new Task" description="">
-        <UButton color="secondary" label="Create" ></UButton>
+        <UButton color="secondary" class="hover:cursor-pointer" label="Create"></UButton>
         <template #body>
           <CreateTask @onSubmit="submit"></CreateTask>
         </template>
       </UModal>
     </div>
-    <div class="border-secondary-400 rounded-4xl border-2 p-4">
+    <div class="border-secondary-400 rounded-2xl border-2 p-4 shadow-xl">
       <h2>My Tasks</h2>
-      <UTable :data="data" class="flex-1"></UTable>
+      <UTable class="flex-1" :data="data" :columns="columns" @select="selectRow"></UTable>
     </div>
   </div>
 </template>
