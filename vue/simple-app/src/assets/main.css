@@ -1,0 +1,7 @@
+/*
+ * Copyright © 2016-2025 Patrick Zhang.
+ * All Rights Reserved.
+ */
+@import './base.css';
+@import "@nuxt/ui";
+@import 'tailwindcss';

@@ -1,0 +1,28 @@
+// --
+// Copyright © 2016-2025 Patrick Zhang.
+// All Rights Reserved.
+// --
+
+@use 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+button {
+  @apply bg-gray-50 hover:bg-gray-200 text-sky-500 py-2 border-sky-500 border-2 px-4 rounded-3xl cursor-pointer;
+
+  &.primary{
+    @apply bg-sky-500 hover:bg-sky-700 text-white py-2 px-4 border-0 rounded-3xl cursor-pointer;
+  }
+}
+
+html,
+body {
+  @apply bg-white dark:bg-gray-800;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
