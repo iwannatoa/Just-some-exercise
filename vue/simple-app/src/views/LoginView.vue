@@ -1,7 +1,3 @@
-<!--
- ~ Copyright © 2016-2025 Patrick Zhang.
- ~ All Rights Reserved.
- -->
 <script setup lang="ts">
 import MyLoading, { type Status } from '@/components/MyLoading.vue';
 import { db, type User } from '@/stores/db';

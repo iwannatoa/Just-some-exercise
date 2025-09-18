@@ -36,5 +36,13 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div></div>
+  <div>
+    <pre class="json">{{ JSON.stringify(taskDetail, undefined,'  ') }}</pre>
+  </div>
 </template>
+<style lang="scss">
+.json {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+</style>
