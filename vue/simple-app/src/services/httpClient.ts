@@ -1,31 +1,19 @@
-class HttpClient {
-  private static instance: HttpClient;
-  private baseUrl: string;
-  private token: string;
+import { defineStore } from 'pinia';
 
-  private constructor() {
-    this.baseUrl = import.meta.env.VITE_API_BASE_URL || '';
-    this.token = '';
+const useHttpClient = defineStore('httpClient', () => {
+  let baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+  let token = 'user:user';
+  function setToken(newToken: string) {
+    token = newToken;
   }
-
-  public static getInstance(): HttpClient {
-    if (!HttpClient.instance) {
-      HttpClient.instance = new HttpClient();
-    }
-    // TODO move to other place to set token
-    HttpClient.instance.setToken('user:user');
-    return HttpClient.instance;
+  function setBaseUrl(newUrl: string) {
+    baseUrl = newUrl;
   }
-
-  public setToken(token: string) {
-    this.token = token;
-  }
-
-  private async request<T>(endpoint: string, config: RequestInit): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+  async function request<T>(endpoint: string, config: RequestInit): Promise<T> {
+    const url = `${baseUrl}${endpoint}`;
     const headers = {
       ...{ 'Content-Type': 'application/json' },
-      ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...config.headers,
     };
     const response = await fetch(url, {
@@ -39,30 +27,27 @@ class HttpClient {
 
     return response.json();
   }
-
-  public get<T>(endpoint: string, config?: RequestInit): Promise<T> {
+  function get<T>(endpoint: string, config?: RequestInit): Promise<T> {
     return this.request(endpoint, { ...config, method: 'GET' });
   }
-
-  public post<T>(endpoint: string, body: unknown, config?: RequestInit): Promise<T> {
-    return this.request(endpoint, {
+  function post<T>(endpoint: string, body: unknown, config?: RequestInit): Promise<T> {
+    return request(endpoint, {
       ...config,
       method: 'POST',
       body: JSON.stringify(body),
     });
   }
-
-  public put<T>(endpoint: string, body: unknown, config?: RequestInit): Promise<T> {
-    return this.request(endpoint, {
+  function put<T>(endpoint: string, body: unknown, config?: RequestInit): Promise<T> {
+    return request(endpoint, {
       ...config,
       method: 'PUT',
       body: JSON.stringify(body),
     });
   }
-
-  public delete<T>(endpoint: string, config?: RequestInit): Promise<T> {
-    return this.request(endpoint, { ...config, method: 'DELETE' });
+  function remove<T>(endpoint: string, config?: RequestInit): Promise<T> {
+    return request(endpoint, { ...config, method: 'DELETE' });
   }
-}
+  return { setToken, setBaseUrl, request, get, post, put, delete: remove };
+});
 
-export default HttpClient;
+export default useHttpClient;

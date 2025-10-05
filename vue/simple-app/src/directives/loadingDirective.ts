@@ -10,10 +10,14 @@ export const loadingDirective = {
       if (!existingOverlay) {
         addOverlay(el);
       }
-    } else {
-      if (existingOverlay) {
-        el.removeChild(existingOverlay);
-      }
+    } else if (existingOverlay) {
+      el.removeChild(existingOverlay);
+    }
+  },
+  unmounted(el: HTMLElement) {
+    const existingOverlay = el.querySelector('.overlay');
+    if (existingOverlay) {
+      el.removeChild(existingOverlay);
     }
   },
 };

@@ -5,10 +5,10 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
-import useUserStore from './stores/user';
+import useLocalUserStore from './stores/user';
 
 const showBanner = ref(!(localStorage.getItem('showBanner') === 'false' && true));
-const userStore = useUserStore();
+const userStore = useLocalUserStore();
 const userInfo = ref(userStore.userInfo);
 const router = useRouter();
 

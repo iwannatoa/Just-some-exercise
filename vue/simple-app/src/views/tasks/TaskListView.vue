@@ -4,12 +4,12 @@
  -->
 <script setup lang="ts">
 import { db, type Task, type TaskHistory } from '@/stores/db';
-import useUserStore from '@/stores/user';
+import useLocalUserStore from '@/stores/user';
 import type { TableColumn, TableRow } from '@nuxt/ui';
 import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
-const user = useUserStore().userInfo.user!;
+const user = useLocalUserStore().userInfo.user!;
 const router = useRouter();
 const data = ref<Task[]>([]);
 

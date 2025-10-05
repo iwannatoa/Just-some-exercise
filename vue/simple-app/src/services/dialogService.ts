@@ -1,21 +1,10 @@
+import { useDialogStore } from '@/stores/dialogStore';
 import { createApp, h, inject, reactive, type App, type Component } from 'vue';
 
 // 使用 Symbol 作为注入 key
-const DialogKey = Symbol('dialog');
-
-interface DialogQueueItem {
-  id: symbol;
-  instance: unknown;
-  mountPoint: HTMLElement;
-}
-
-const dialogState = reactive({
-  queue: [] as DialogQueueItem[],
-});
-
+const DIALOG_KEY = Symbol('dialog');
 export interface DialogOptions {
-  title?: string;
-  message?: string;
+  width?: string;
   [key: string]: unknown;
 }
 
@@ -26,10 +15,9 @@ export interface DialogService {
 
 export class DialogRef<T = unknown> {
   id: symbol;
-  private _res: T | undefined;
-  private _closeCallback?: (res?: T) => void;
   private _close: (dialog: DialogRef<T>, res?: T) => void;
   private _closed = false;
+  private _onClose?: (res?: T) => void;
 
   constructor(id: symbol, closeFunc: (dialog: DialogRef<T>, res?: T) => void) {
     this.id = id;
@@ -38,17 +26,12 @@ export class DialogRef<T = unknown> {
   close(res?: T): void {
     if (this._closed) return;
     this._closed = true;
-    this._res = res;
     this._close(this);
+    if (this._onClose) this._onClose(res);
   }
   onClose(callback: (res?: T) => void): this {
-    this._closeCallback = callback;
+    this._onClose = callback;
     return this;
-  }
-  callCloseCallback() {
-    if (this._closeCallback) {
-      this._closeCallback(this._res);
-    }
   }
 }
 
@@ -68,6 +51,7 @@ function removeMountPoint(mountPoint: HTMLElement) {
 export function createDialogService() {
   const service: DialogService = {
     open<T>(content: Component, options: DialogOptions) {
+      const dialogStore = useDialogStore();
       const id = Symbol();
       const mountPoint = createMountPoint();
       const dialogRef: DialogRef<T> = new DialogRef<T>(id, this.close);
@@ -75,41 +59,45 @@ export function createDialogService() {
         render: () =>
           h(content, {
             ...options,
-            onClose: (res?: T) => {
-              this.close(dialogRef, res);
+            onClose: (res: T) => {
+              dialogRef.close(res);
             },
           }),
       });
-      dialogState.queue.push({ id, instance: dialogApp, mountPoint });
+      if (window.__APP_ROUTER__) {
+        dialogApp.use(window.__APP_ROUTER__);
+      }
+      if (window.__APP_PINIA__) {
+        dialogApp.use(window.__APP_PINIA__);
+      }
+      dialogStore.addDialog({ id, instance: dialogApp, mountPoint });
       dialogApp.mount(mountPoint);
       return dialogRef;
     },
 
-    close<T>(dialogRef: DialogRef<T>, res?: T) {
+    close<T>(dialogRef: DialogRef<T>) {
+      const dialogStore = useDialogStore();
       const { id } = dialogRef;
-      const index = dialogState.queue.findIndex((d) => d.id === id);
-      if (index >= 0) {
-        const { instance, mountPoint } = dialogState.queue[index];
-        (instance as App).unmount();
+      const dialog = dialogStore.getDialog(id);
+      if (!dialog) return;
+      Promise.resolve().then(() => {
+        const { instance, mountPoint } = dialog;
+        instance.unmount();
         removeMountPoint(mountPoint);
-        dialogState.queue.splice(index, 1);
-      }
-      if (res !== undefined) {
-        dialogRef['_res'] = res;
-      }
-      dialogRef.callCloseCallback();
+        dialogStore.removeDialog(dialogRef.id);
+      });
     },
   };
   return {
     install(app: App) {
-      app.provide(DialogKey, service);
+      app.provide(DIALOG_KEY, service);
       app.config.globalProperties.$dialog = service;
     },
   };
 }
 
 export function useDialog(): DialogService {
-  const service = inject<DialogService>(DialogKey);
+  const service = inject<DialogService>(DIALOG_KEY);
   if (!service) {
     throw new Error('Dialog service not provided');
   }

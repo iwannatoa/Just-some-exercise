@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import BaseDialog from '@/components/BaseDialog.vue';
-import { loadingDirective } from '@/directives/MyOverlay';
+import { loadingDirective } from '@/directives/loadingDirective';
 import { useDialog } from '@/services/dialogService';
-import HttpClient from '@/services/httpClient';
-import type { User } from '@/stores/manage.model';
+import useUserService, { type User } from '@/services/userService';
 import type { TableColumn } from '@nuxt/ui';
-import { onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, onMounted, watch, watchEffect } from 'vue';
 
-const userInfo = ref<User[]>([]);
-const loading = ref(false);
-const httpClient = HttpClient.getInstance();
+const userService = useUserService();
+const { users: userInfo, loading } = storeToRefs(userService);
+const count = computed(() => userInfo.value?.length ?? 0);
 const dialogService = useDialog();
 
 defineOptions({
@@ -24,16 +24,6 @@ const columnDefs: TableColumn<User>[] = [
   { accessorKey: 'orgnizations', header: 'Organizations' },
 ];
 
-async function refreshListData() {
-  loading.value = true;
-  const userResponse: { entries: [] } = await httpClient.get('/user/api/user');
-  console.log(userResponse);
-  userInfo.value = userResponse.entries.map((entry: User & { organizations: string[] }) => {
-    entry.organizations = entry.orgnizations;
-    return entry;
-  });
-  loading.value = false;
-}
 
 function createNewUser() {
   console.log('create new user');
@@ -45,19 +35,24 @@ function createNewUser() {
     },
   ).onClose((res?: boolean) => {
     console.log('dialog closed', res);
-    if (res) {
-      refreshListData();
-    }
   });
 }
+watch(userInfo, (newVal, oldVal) => {
+  console.log('userInfo changed:', newVal, oldVal);
+}, { deep: true });
 
-onMounted(async () => {
-  refreshListData();
+watchEffect(() => {
+  console.log('loading state:', loading.value);
+})
+
+onMounted(() => {
+  userService.getUsers();
 });
 </script>
 <template>
   <div class="flex flex-row justify-between mb-2">
     <u-button @click="createNewUser">Create</u-button>
   </div>
+  <div>{{ count }} Users</div>
   <u-table v-loading="loading" :data="userInfo" :columns="columnDefs"></u-table>
 </template>

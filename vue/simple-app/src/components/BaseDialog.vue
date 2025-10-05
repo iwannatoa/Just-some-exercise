@@ -1,13 +1,17 @@
 <template>
-    <transition name="fade">
-        <div v-if="title" class="dialog-overlay">
-            <div class="dialog-content" :style="{ width: width || '16rem' }">
-                <div class="dialog-title">{{ title }}</div>
+    <transition name="{{animation}}">
+        <div v-if="animation" class="dialog-overlay">
+            <div class="dialog-content" :style="{ width: width }">
+                <div class="dialog-title">
+                    <slot name="title"></slot>
+                </div>
                 <div class="dialog-body">
                     <slot></slot>
                 </div>
                 <div class="dialog-actions">
-                    <u-button @click="$emit('close')">Close</u-button>
+                    <slot name="dialog-actions">
+                        <u-button @click="$emit('close')">Close</u-button>
+                    </slot>
                 </div>
             </div>
         </div>
@@ -15,7 +19,15 @@
 </template>
 
 <script setup lang="ts">
-defineProps(['title', 'width'])
+defineProps({
+    width: {
+        type: String,
+        default: '16rem'
+    }, animation: {
+        type: String,
+        default: 'fade'
+    }
+})
 defineEmits(['close'])
 </script>
 

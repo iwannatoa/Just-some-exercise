@@ -11,7 +11,7 @@ export interface UserInfo {
   isLogin: boolean;
 }
 
-const useUserStore = defineStore('userInfo', () => {
+const useLocalUserStore = defineStore('userInfo', () => {
   // should use useCookie but need import other package
   const userInfo = useLocalStorage<UserInfo>('User', { isLogin: false });
   function setUserInfo(user: User) {
@@ -27,4 +27,4 @@ const useUserStore = defineStore('userInfo', () => {
   return { userInfo, setUserInfo, logout };
 });
 
-export default useUserStore;
+export default useLocalUserStore;
