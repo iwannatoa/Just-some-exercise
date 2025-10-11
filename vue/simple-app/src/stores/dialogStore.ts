@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, type App, type Ref } from 'vue';
+import { markRaw, ref, type App, type Ref } from 'vue';
 
 export interface DialogQueueItem {
   id: symbol;
@@ -11,7 +11,10 @@ export const useDialogStore = defineStore('dialog', () => {
   const queue: Ref<DialogQueueItem[]> = ref([]);
 
   const addDialog = (dialog: DialogQueueItem) => {
-    queue.value.push(dialog);
+    queue.value.push({
+      ...dialog,
+      instance: markRaw(dialog.instance),
+    });
   };
 
   const removeDialog = (id: symbol) => {

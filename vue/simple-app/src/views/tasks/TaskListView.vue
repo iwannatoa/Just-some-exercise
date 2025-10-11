@@ -62,7 +62,7 @@ function selectRow(row: TableRow<Task>) {
       <UModal v-model:open="isModalOpen" title="Create a new Task" description="">
         <UButton color="secondary" class="hover:cursor-pointer" label="Create"></UButton>
         <template #body>
-          <CreateTask @onSubmit="submit"></CreateTask>
+          <CreateTask @submit="submit"></CreateTask>
         </template>
       </UModal>
     </div>

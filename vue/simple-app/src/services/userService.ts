@@ -17,7 +17,7 @@ export interface User {
   orgnizations: string[];
 }
 
-const useUserService = defineStore('user', () => {
+const useUserService = defineStore('userService', () => {
   const users = ref<User[]>([]);
   const httpClient = useHttpClient();
   const loading = ref(false);

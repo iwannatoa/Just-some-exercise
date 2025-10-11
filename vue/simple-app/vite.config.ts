@@ -19,7 +19,19 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
     ui({
-      ui: { colors: { primary: 'indigo', secondary: 'sky' } },
+      ui: {
+        colors: { primary: 'indigo', secondary: 'sky' },
+        select: {
+          slots: {
+            content: 'z-1002',
+          },
+        },
+        selectMenu: {
+          slots: {
+            content: 'z-1002',
+          },
+        },
+      },
     }),
   ],
   css: {

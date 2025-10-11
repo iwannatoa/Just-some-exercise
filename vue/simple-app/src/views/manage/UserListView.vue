@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import BaseDialog from '@/components/BaseDialog.vue';
+import CreateUserDialog from '@/components/CreateUserDialog.vue';
 import { loadingDirective } from '@/directives/loadingDirective';
-import { useDialog } from '@/services/dialogService';
+import { useDialogService } from '@/services/dialogService';
 import useUserService, { type User } from '@/services/userService';
 import type { TableColumn } from '@nuxt/ui';
 import { storeToRefs } from 'pinia';
@@ -10,7 +10,7 @@ import { computed, onMounted, watch, watchEffect } from 'vue';
 const userService = useUserService();
 const { users: userInfo, loading } = storeToRefs(userService);
 const count = computed(() => userInfo.value?.length ?? 0);
-const dialogService = useDialog();
+const dialogService = useDialogService();
 
 defineOptions({
   directives: { loading: loadingDirective },
@@ -26,12 +26,11 @@ const columnDefs: TableColumn<User>[] = [
 
 
 function createNewUser() {
-  console.log('create new user');
   dialogService.open<boolean>(
-    BaseDialog,
+    CreateUserDialog,
     {
       title: 'Create New User',
-      width: '30rem'
+      width: '40rem'
     },
   ).onClose((res?: boolean) => {
     console.log('dialog closed', res);

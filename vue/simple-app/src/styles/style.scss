@@ -5,7 +5,6 @@
 @use 'tailwindcss';
 
 @forward 'variables';
-@tailwind utilities;
 
 @layer base {
   button,
