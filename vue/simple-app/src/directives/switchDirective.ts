@@ -1,15 +1,9 @@
 import { nextTick, type Directive, type DirectiveBinding } from 'vue';
+
 type SwitchCase = {
   value: unknown;
   el: HTMLElement;
   isDefault: boolean;
-};
-type SwitchDirectives = {
-  _switchCases?: SwitchCase[];
-  _switchCasesMap?: Map<unknown, SwitchCase>;
-  _switchValue?: unknown;
-  _hasSwitchParent?: boolean;
-  _defaultCase?: SwitchCase;
 };
 
 interface SwitchElement extends HTMLElement {
@@ -23,6 +17,7 @@ interface SwitchElement extends HTMLElement {
 const SWITCH_HIDDEN_CLASS = 'v-switch-hidden';
 let updateQueue = new Map<SwitchElement, number>();
 let rafId: number | null = null;
+
 const hiddenStyle = `
 .${SWITCH_HIDDEN_CLASS} {
   transform: scale(0) !important;    
@@ -30,14 +25,24 @@ const hiddenStyle = `
   position: absolute !important;
   pointer-events: none !important;
 }`;
-let styleIntjected = false;
+
+let styleInjected = false;
+
 const injectStyle = () => {
-  if (styleIntjected) return;
+  if (styleInjected || typeof document === 'undefined') return;
+
+  if (document.querySelector('style[data-v-switch]')) {
+    styleInjected = true;
+    return;
+  }
+
   const style = document.createElement('style');
   style.textContent = hiddenStyle;
+  style.setAttribute('data-v-switch', '');
   document.head.appendChild(style);
-  styleIntjected = true;
+  styleInjected = true;
 };
+
 const batchUpdate = () => {
   updateQueue.forEach((_, el) => updateActiveCase(el));
   updateQueue.clear();
@@ -76,12 +81,18 @@ const validateSwitchContainer = (el: SwitchElement) => {
 const updateActiveCase = (el: SwitchElement) => {
   if (!el._switchCases || !validateSwitchContainer(el)) return;
 
-  const activeCase =
-    el._switchCases.find((c) => !c.isDefault && c.value === el._switchValue) ||
-    el._switchCases.find((c) => c.isDefault) ||
-    null;
+  let activeCase: SwitchCase | null = null;
 
-  // 简单的 classList.toggle 在现代浏览器中已经足够高效
+  if (el._switchCasesMap && el._switchValue !== undefined) {
+    activeCase = el._switchCasesMap.get(el._switchValue) || null;
+  }
+
+  if (!activeCase && el._defaultCase) {
+    activeCase = el._defaultCase;
+  }
+
+  activeCase ??= el._switchCases.find((c) => c.isDefault) || null;
+
   el._switchCases.forEach((c) => {
     c.el.classList.toggle(SWITCH_HIDDEN_CLASS, c !== activeCase);
   });
@@ -89,7 +100,9 @@ const updateActiveCase = (el: SwitchElement) => {
 
 const switchDirective = {
   switch: {
-    mounted(el: HTMLElement & SwitchDirectives, binding: DirectiveBinding) {
+    mounted(el: SwitchElement, binding: DirectiveBinding) {
+      injectStyle();
+
       el._switchCases = [];
       el._switchCasesMap = new Map();
       el._switchValue = binding.value;
@@ -99,56 +112,62 @@ const switchDirective = {
         validateSwitchContainer(el);
       });
     },
-    updated(el: HTMLElement & SwitchDirectives, binding: DirectiveBinding) {
+    updated(el: SwitchElement, binding: DirectiveBinding) {
       if (binding.value !== el._switchValue) {
         el._switchValue = binding.value;
         scheduleUpdate(el);
       }
     },
-    unmounted(el: HTMLElement & SwitchDirectives) {
+    unmounted(el: SwitchElement) {
       el._switchCases = undefined;
       el._switchCasesMap = undefined;
       el._switchValue = undefined;
       el._hasSwitchParent = undefined;
+      el._defaultCase = undefined;
     },
   } as Directive<HTMLElement>,
 
   case: {
     mounted(el: HTMLElement, binding: DirectiveBinding) {
       validateSwitchUsage(el, 'case');
-      const parent = el.parentElement as HTMLElement & SwitchDirectives;
-      if (parent && parent._switchCases) {
+      const parent = el.parentElement as SwitchElement;
+      if (parent._switchCases && parent._switchCasesMap) {
         const newCase = {
           value: binding.value,
           el: el,
           isDefault: false,
         };
+
         parent._switchCases.push(newCase);
-        parent._switchCasesMap?.set(binding.value, newCase);
-        el.style.display = 'none';
+        parent._switchCasesMap.set(binding.value, newCase);
+
+        el.classList.add(SWITCH_HIDDEN_CLASS);
         scheduleUpdate(parent);
       }
     },
     updated(el: HTMLElement, binding: DirectiveBinding) {
-      const parent = el.parentElement as HTMLElement & SwitchDirectives;
-      if (parent?._switchCases) {
+      const parent = el.parentElement as SwitchElement;
+      if (parent?._switchCases && parent._switchCasesMap) {
         const existingCase = parent._switchCases.find((c) => c.el === el);
         if (existingCase && existingCase.value !== binding.value) {
+          parent._switchCasesMap.delete(existingCase.value);
           existingCase.value = binding.value;
+          parent._switchCasesMap.set(binding.value, existingCase);
           scheduleUpdate(parent);
         }
       }
     },
     unmounted(el: HTMLElement) {
-      const parent = el.parentElement as HTMLElement & SwitchDirectives;
-      if (parent?._switchCases) {
+      const parent = el.parentElement as SwitchElement;
+      if (parent?._switchCases && parent._switchCasesMap) {
+        const removedCase = parent._switchCases.find((c) => c.el === el);
         parent._switchCases = parent._switchCases.filter((c) => c.el !== el);
+
+        if (removedCase) {
+          parent._switchCasesMap.delete(removedCase.value);
+        }
+
         scheduleUpdate(parent);
-        parent._switchCasesMap?.forEach((c, k) => {
-          if (c.el === el) {
-            parent._switchCasesMap?.delete(k);
-          }
-        });
       }
     },
   } as Directive<HTMLElement>,
@@ -156,21 +175,23 @@ const switchDirective = {
   caseDefault: {
     mounted(el: HTMLElement) {
       validateSwitchUsage(el, 'default');
-      const parent = el.parentElement as HTMLElement & SwitchDirectives;
-      if (parent && parent._switchCases) {
+      const parent = el.parentElement as SwitchElement;
+      if (parent._switchCases) {
         const defaultCase = {
           value: undefined,
           el: el,
           isDefault: true,
         };
+
         parent._switchCases.push(defaultCase);
         parent._defaultCase = defaultCase;
-        el.style.display = 'none';
+
+        el.classList.add(SWITCH_HIDDEN_CLASS);
         scheduleUpdate(parent);
       }
     },
     updated(el: HTMLElement) {
-      const parent = el.parentElement as HTMLElement & SwitchDirectives;
+      const parent = el.parentElement as SwitchElement;
       if (parent && !parent._switchCases?.some((c) => c.el === el && c.isDefault)) {
         console.warn('v-case-default was re-mounted, re-adding to switch container');
         const defaultCase = {
@@ -184,13 +205,15 @@ const switchDirective = {
       }
     },
     unmounted(el: HTMLElement) {
-      const parent = el.parentElement as HTMLElement & SwitchDirectives;
+      const parent = el.parentElement as SwitchElement;
       if (parent?._switchCases) {
         parent._switchCases = parent._switchCases.filter((c) => c.el !== el);
+        if (parent._defaultCase?.el === el) {
+          parent._defaultCase = undefined;
+        }
         if (!parent._switchCases.some((c) => c.isDefault)) {
           console.warn('v-case-default was removed from switch container');
         }
-        parent._defaultCase = undefined;
         scheduleUpdate(parent);
       }
     },
