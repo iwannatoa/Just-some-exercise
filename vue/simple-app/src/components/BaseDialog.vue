@@ -19,7 +19,14 @@
 </template>
 
 <script setup lang="ts" generic="T = unknown">
+import { useParentFallback } from '@/utils/useParentFallback';
 import { onMounted, ref } from 'vue';
+const fallback = useParentFallback({
+  title: 'Dialog Title',
+  width: '16rem',
+  animation: 'fade',
+  closeOnClickOutside: true
+});
 const props = defineProps({
   title: {
     type: String,
@@ -46,7 +53,6 @@ const emit = defineEmits<{
   close: [value: T | null]
 }>();
 const show = ref(true);
-
 function clickOutSide(): void {
   if (props.closeOnClickOutside) { emit('close', null); }
 }
@@ -70,7 +76,7 @@ onMounted(() => {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: auto;
 }
 
 .dialog-content {
@@ -80,7 +86,6 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   background: white;
   padding: 2rem;
-  z-index: 1001;
 
   .dialog-title {
     font-size: 1.5rem;

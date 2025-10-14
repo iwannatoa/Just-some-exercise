@@ -21,16 +21,6 @@ export default defineConfig({
     ui({
       ui: {
         colors: { primary: 'indigo', secondary: 'sky' },
-        select: {
-          slots: {
-            content: 'z-1002',
-          },
-        },
-        selectMenu: {
-          slots: {
-            content: 'z-1002',
-          },
-        },
       },
     }),
   ],

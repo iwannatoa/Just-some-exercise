@@ -30,7 +30,8 @@ import { DialogRef } from '../services/dialogService';
 
 const { dialogRef } = useAttrs() as { dialogRef: DialogRef<T> };
 defineProps({
-  title: { type: String }
+  title: { type: String },
+  width: { type: String, default: '40rem' }
 });
 const orgService = useOrgService();
 const roleService = useRoleService();

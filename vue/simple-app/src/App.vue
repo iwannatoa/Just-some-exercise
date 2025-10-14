@@ -6,10 +6,11 @@
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
 import useLocalUserStore from './stores/user';
+import { storeToRefs } from 'pinia';
 
 const showBanner = ref(!(localStorage.getItem('showBanner') === 'false' && true));
 const userStore = useLocalUserStore();
-const userInfo = ref(userStore.userInfo);
+const { userInfo } = storeToRefs(userStore);
 const router = useRouter();
 
 function closeBanner() {
@@ -18,7 +19,6 @@ function closeBanner() {
 }
 
 function logout() {
-  console.log('logout');
   userStore.logout();
   localStorage.clear();
   router.replace('/login');
@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-[100vh]">
+  <div class="h-[100vh] isolate">
     <UApp>
       <template v-if="userInfo.isLogin">
         <div class="app-container">
@@ -75,6 +75,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 @use '@/styles/style' as *;
+
 .app-container {
   display: grid;
   grid-template:
@@ -95,10 +96,12 @@ onMounted(() => {
   z-index: 100;
   background-color: $primary_color;
 }
+
 .sidenav {
   grid-area: sidenav;
-  box-shadow: 3px 0 6px  #00000029;
+  box-shadow: 3px 0 6px #00000029;
   z-index: 99;
+
   nav {
     height: 100%;
     display: flex;
@@ -107,17 +110,19 @@ onMounted(() => {
     background-color: $primary_color;
 
     .nav-item {
-      @apply min-w-40  p-4;
+      @apply min-w-40 p-4;
       color: var(--ui-color-primary-50);
-      &:hover{
+&:hover {
         background-color: var(--ui-color-primary-600);
       }
+
       &.router-link-active {
         background-color: var(--ui-color-primary-700);
       }
     }
   }
 }
+
 .content {
   grid-area: content;
 }

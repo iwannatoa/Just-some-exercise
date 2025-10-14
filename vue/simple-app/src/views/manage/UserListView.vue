@@ -14,6 +14,7 @@ const dialogService = useDialogService();
 
 defineOptions({
   directives: { loading: loadingDirective },
+  name: 'UserList',
 });
 const columnDefs: TableColumn<User>[] = [
   { accessorKey: 'id', header: 'ID' },
