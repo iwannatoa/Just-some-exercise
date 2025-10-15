@@ -79,6 +79,7 @@ const validateSwitchContainer = (el: SwitchElement) => {
 };
 
 const updateActiveCase = (el: SwitchElement) => {
+  console.log('Updating v-switch with value:', el._switchValue, el._switchCasesMap);
   if (!el._switchCases || !validateSwitchContainer(el)) return;
 
   let activeCase: SwitchCase | null = null;
@@ -98,16 +99,16 @@ const updateActiveCase = (el: SwitchElement) => {
   });
 };
 
-const switchDirective = {
+const _switchDirective = {
   switch: {
-    mounted(el: SwitchElement, binding: DirectiveBinding) {
+    beforeMount(el: SwitchElement, binding: DirectiveBinding) {
       injectStyle();
-
       el._switchCases = [];
       el._switchCasesMap = new Map();
       el._switchValue = binding.value;
       el._hasSwitchParent = true;
-
+    },
+    mounted(el: SwitchElement, binding: DirectiveBinding) {
       nextTick(() => {
         validateSwitchContainer(el);
       });
@@ -129,6 +130,7 @@ const switchDirective = {
 
   case: {
     mounted(el: HTMLElement, binding: DirectiveBinding) {
+      console.debug('v-case mounted with value:', binding.value);
       validateSwitchUsage(el, 'case');
       const parent = el.parentElement as SwitchElement;
       if (parent._switchCases && parent._switchCasesMap) {
@@ -150,7 +152,10 @@ const switchDirective = {
       if (parent?._switchCases && parent._switchCasesMap) {
         const existingCase = parent._switchCases.find((c) => c.el === el);
         if (existingCase && existingCase.value !== binding.value) {
-          parent._switchCasesMap.delete(existingCase.value);
+          const curElInMap = parent._switchCasesMap.get(existingCase.value);
+          if (curElInMap && curElInMap.el === el) {
+            parent._switchCasesMap.delete(existingCase.value);
+          }
           existingCase.value = binding.value;
           parent._switchCasesMap.set(binding.value, existingCase);
           scheduleUpdate(parent);
@@ -222,5 +227,7 @@ const switchDirective = {
 
 export const useSwitchDirectives = () => {
   injectStyle();
-  return switchDirective;
+  return _switchDirective;
 };
+
+export const switchDirectives = useSwitchDirectives();

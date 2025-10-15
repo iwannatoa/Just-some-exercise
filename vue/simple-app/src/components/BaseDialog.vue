@@ -1,10 +1,10 @@
 <template>
   <div class="dialog-overlay" @click="clickOutSide()">
   </div>
-  <transition name="{{animation}}">
-    <div v-if="show" class="dialog-content" :style="{ width: width }">
+  <transition name="{{mergeProps.animation}}">
+    <div v-if="show" class="dialog-content" :style="{ width: mergeProps.width }">
       <div class="dialog-title">
-        <slot name="dialog-title">{{ title }}</slot>
+        <slot name="dialog-title">{{ mergeProps.title }}</slot>
       </div>
       <div class="dialog-body">
         <slot></slot>
@@ -20,7 +20,7 @@
 
 <script setup lang="ts" generic="T = unknown">
 import { useParentFallback } from '@/utils/useParentFallback';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 const fallback = useParentFallback({
   title: 'Dialog Title',
   width: '16rem',
@@ -49,17 +49,21 @@ const props = defineProps({
     type: Object as () => T
   }
 });
+
+const mergeProps = computed(() => ({
+  ...props,
+  ...fallback.value
+}));
 const emit = defineEmits<{
   close: [value: T | null]
 }>();
 const show = ref(true);
 function clickOutSide(): void {
-  if (props.closeOnClickOutside) { emit('close', null); }
+  if (mergeProps.value.closeOnClickOutside) { emit('close', null); }
 }
-
 onMounted(() => {
   let timer = null;
-  if (props.animation) {
+  if (mergeProps.value.animation) {
     show.value = false;
     timer = setTimeout(() => {
       show.value = true;
@@ -68,7 +72,8 @@ onMounted(() => {
   return () => {
     if (timer) { clearTimeout(timer); }
   };
-})
+});
+
 </script>
 
 <style scoped>
