@@ -9,6 +9,7 @@ import { db } from '@/stores/db';
 
 const route = useRoute();
 const router = useRouter();
+
 const taskId = ref(0);
 const taskDetail = ref();
 const taskDb = db.task;
@@ -24,9 +25,11 @@ watchEffect(async () => {
   taskDetail.value = await getTaskById(taskId.value);
 });
 
+
 onMounted(() => {
   const id = +route.params.id;
   console.log(id);
+  console.log(window.history.state);
   if (id) {
     taskId.value = id;
   } else {

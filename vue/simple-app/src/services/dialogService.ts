@@ -77,6 +77,7 @@ export function createDialogService() {
             ...dialogOptions,
             dialogRef,
             onClose: (res: T) => {
+              console.log('on close');
               dialogRef.close(res);
             },
           }),

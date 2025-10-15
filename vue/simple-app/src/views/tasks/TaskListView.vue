@@ -51,7 +51,11 @@ async function submit(event: Task) {
 }
 
 function selectRow(row: TableRow<Task>) {
-  router.push('/task/' + row.original.id);
+  router.push({
+    name: 'taskDetail',
+    params: { id: row.original.id },
+    state: { from: 'taskList' },
+  });
 }
 </script>
 

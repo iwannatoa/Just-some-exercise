@@ -19,6 +19,7 @@
   width: 100%;
   padding: 1rem;
   background-color: white;
+  box-shadow: 0 0 0.5rem 2px rgba(0, 0, 0, 0.1);
 }
 .item{
   background-color: white;
@@ -26,6 +27,7 @@
   padding: 0.5rem;
   border-radius: 0.5rem 0.5rem 0 0 ;
   border: 1px solid $primary-color;
+  box-shadow: 0 0 0.5rem 2px rgba(0, 0, 0, 0.1);
   
   &:hover{
     background-color: var(--ui-color-primary-100);

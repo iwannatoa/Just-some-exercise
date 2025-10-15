@@ -79,7 +79,6 @@ const validateSwitchContainer = (el: SwitchElement) => {
 };
 
 const updateActiveCase = (el: SwitchElement) => {
-  console.log('Updating v-switch with value:', el._switchValue, el._switchCasesMap);
   if (!el._switchCases || !validateSwitchContainer(el)) return;
 
   let activeCase: SwitchCase | null = null;
@@ -130,7 +129,6 @@ const _switchDirective = {
 
   case: {
     mounted(el: HTMLElement, binding: DirectiveBinding) {
-      console.debug('v-case mounted with value:', binding.value);
       validateSwitchUsage(el, 'case');
       const parent = el.parentElement as SwitchElement;
       if (parent._switchCases && parent._switchCasesMap) {
@@ -153,6 +151,7 @@ const _switchDirective = {
         const existingCase = parent._switchCases.find((c) => c.el === el);
         if (existingCase && existingCase.value !== binding.value) {
           const curElInMap = parent._switchCasesMap.get(existingCase.value);
+          // Ensure we only delete if the mapping points to the current element
           if (curElInMap && curElInMap.el === el) {
             parent._switchCasesMap.delete(existingCase.value);
           }
