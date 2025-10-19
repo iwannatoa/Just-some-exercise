@@ -2,7 +2,7 @@
  * Copyright © 2016-2025 Patrick Zhang.
  * All Rights Reserved.
  */
-import './assets/main.css'
+import './assets/main.css';
 import './styles/style.scss';
 
 import { createApp } from 'vue';
@@ -29,4 +29,4 @@ window.__APP_PLUGINS__ = [];
 window.__APP_PLUGINS__.push(pinia, PrimeVue, router, ui);
 
 app.component('myButton', Button);
-app.mount('#app')
+app.mount('#app');

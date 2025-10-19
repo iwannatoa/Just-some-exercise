@@ -25,7 +25,6 @@ watchEffect(async () => {
   taskDetail.value = await getTaskById(taskId.value);
 });
 
-
 onMounted(() => {
   const id = +route.params.id;
   console.log(id);
@@ -40,7 +39,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    <pre class="json">{{ JSON.stringify(taskDetail, undefined,'  ') }}</pre>
+    <pre class="json">{{ JSON.stringify(taskDetail, undefined, '  ') }}</pre>
   </div>
 </template>
 <style lang="scss">

@@ -101,7 +101,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   const memorized = useMemo(() => {
     return (
       <ReactECharts
-        className="flex-none"
+        className='flex-none'
         option={gridOptions}
         lazyUpdate={true}
         showLoading={pageStatus === "Loading"}
@@ -129,14 +129,14 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   }, []);
 
   return (
-    <div className="h-full flex flex-col p-4 min-h-0">
-      <h1 className="flex-none">Here we come</h1>
+    <div className='h-full flex flex-col p-4 min-h-0'>
+      <h1 className='flex-none'>Here we come</h1>
       {memorized}
-      <div className="flex flex-row">
+      <div className='flex flex-row'>
         {(data.data.length > 0 && (
-          <table className="flex-1 text-center bg-gray-50 min-h-0 overflow-auto">
-            <tr key="header" className="bg-gray-200 shadow-2xl shadow-gray-300">
-              <th key="time">Time</th>
+          <table className='flex-1 text-center bg-gray-50 min-h-0 overflow-auto'>
+            <tr key='header' className='bg-gray-200 shadow-2xl shadow-gray-300'>
+              <th key='time'>Time</th>
               {data.categories.map(type => (
                 <th key={type}>{type}</th>
               ))}

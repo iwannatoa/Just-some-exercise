@@ -112,7 +112,7 @@ onMounted(() => {
     .nav-item {
       @apply min-w-40 p-4;
       color: var(--ui-color-primary-50);
-&:hover {
+      &:hover {
         background-color: var(--ui-color-primary-600);
       }
 
