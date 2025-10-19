@@ -3,7 +3,7 @@
  * All Rights Reserved.
  */
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/tasks/HomeView.vue';
+import TaskListView from '../views/tasks/TaskListView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path: '/task',
       name: 'taskHome',
-      component: HomeView,
+      component: TaskListView,
     },
     {
       path: '/task/:id',
@@ -25,12 +25,42 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/manage',
+      name: 'manage',
+      redirect: '/manage/user',
+      component: () => import('../views/manage/ManageRouteView.vue'),
+      children: [
+        {
+          path: 'user',
+          name: 'userManage',
+          component: () => import('../views/manage/UserListView.vue'),
+        },
+        {
+          path: 'role',
+          name: 'roleManage',
+          component: () => import('../views/manage/RoleListView.vue'),
+        },
+        {
+          path: 'entitlement',
+          name: 'entitlementManage',
+          component: () => import('../views/manage/EntitlementListView.vue'),
+        },
+        {
+          path: 'org',
+          name: 'orgManage',
+          component: () => import('../views/manage/OrgListView.vue'),
+        },
+      ],
+    },
+    // default redirect to home
+    {
+      // :pathMatch(.*)* will match everything and put it under $route.params.pathMatch as an array
+      // :pathMatch(.*) will match everything and put it under $route.params.pathMatch as a string
+      // but the previous will be slower, so it all depends on your usage
+      path: '/:pathMatch(.*)*',
+      // should use a component to log the invalid path / let the user know the page is 404 and then redirect to the home
+      name: 'not-found',
+      redirect: { name: 'home', params: {} },
     },
   ],
 });

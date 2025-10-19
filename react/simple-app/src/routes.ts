@@ -8,7 +8,7 @@ import {
   layout,
   prefix,
   route,
-} from '@react-router/dev/routes';
+} from "@react-router/dev/routes";
 
 export default [
   index("./app.tsx"),
@@ -17,6 +17,5 @@ export default [
     route("result", "sudoku/result.tsx"),
   ]),
   ...prefix("reports", [index("./reports/home.tsx")]),
+  route("chat-room", "./chatRoom/chatRoom.tsx"),
 ] satisfies RouteConfig;
-
-

@@ -5,11 +5,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { onMounted, ref, watch } from 'vue';
-import useUserStore from './stores/user';
+import useLocalUserStore from './stores/user';
+import { storeToRefs } from 'pinia';
 
 const showBanner = ref(!(localStorage.getItem('showBanner') === 'false' && true));
-const userStore = useUserStore();
-const userInfo = ref(userStore.userInfo);
+const userStore = useLocalUserStore();
+const { userInfo } = storeToRefs(userStore);
 const router = useRouter();
 
 function closeBanner() {
@@ -18,7 +19,6 @@ function closeBanner() {
 }
 
 function logout() {
-  console.log('logout');
   userStore.logout();
   localStorage.clear();
   router.replace('/login');
@@ -36,13 +36,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-[100vh]">
+  <div class="h-[100vh] isolate">
     <UApp>
       <template v-if="userInfo.isLogin">
         <div class="app-container">
           <div v-if="showBanner" class="banner">
             <div class="flex">
-              <span class="flex-1 text-center content-center" >Welcome {{ userInfo.user?.name }} !</span>
+              <span class="flex-1 text-center content-center">Welcome {{ userInfo.user?.name }} !</span>
               <button class="flex-none p-2" @click="closeBanner()">x</button>
             </div>
           </div>
@@ -57,12 +57,8 @@ onMounted(() => {
 
           <div class="sidenav">
             <nav>
-              <div class="nav-item">
-                <RouterLink to="/task">Tasks</RouterLink>
-              </div>
-              <div class="nav-item">
-                <RouterLink to="/about">About</RouterLink>
-              </div>
+              <RouterLink class="nav-item" to="/task">Tasks</RouterLink>
+              <RouterLink class="nav-item" to="/manage">Manage</RouterLink>
             </nav>
           </div>
           <div class="content">
@@ -78,7 +74,8 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-@use 'styles/style' as *;
+@use '@/styles/style' as *;
+
 .app-container {
   display: grid;
   grid-template:
@@ -90,6 +87,7 @@ onMounted(() => {
 
 .banner {
   grid-area: top;
+  background-color: $secondary_color;
 }
 
 .masthead {
@@ -98,26 +96,33 @@ onMounted(() => {
   z-index: 100;
   background-color: $primary_color;
 }
+
 .sidenav {
   grid-area: sidenav;
+  box-shadow: 3px 0 6px #00000029;
+  z-index: 99;
+
   nav {
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
-    border-right: 1px solid #e1e1e1;
-    background-color: #fff;
     width: fit-content;
     background-color: $primary_color;
 
     .nav-item {
-      @apply min-w-40  p-4;
+      @apply min-w-40 p-4;
       color: var(--ui-color-primary-50);
-      &:has(.router-link-active) {
-        border-left: 6px solid var(--ui-secondary);
+      &:hover {
+        background-color: var(--ui-color-primary-600);
+      }
+
+      &.router-link-active {
+        background-color: var(--ui-color-primary-700);
       }
     }
   }
 }
+
 .content {
   grid-area: content;
 }

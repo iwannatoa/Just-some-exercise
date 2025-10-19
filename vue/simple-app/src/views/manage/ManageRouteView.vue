@@ -1,0 +1,53 @@
+<template>
+  <div class="bg-gray-200 p-4 h-full">
+    <div class="flex flex-row">
+      <RouterLink class="item" to="/manage/user">User List </RouterLink>
+      <RouterLink class="item" to="/manage/org">Org List </RouterLink>
+      <RouterLink class="item" to="/manage/entitlement">Entitlement List </RouterLink>
+      <RouterLink class="item" to="/manage/role">Role List </RouterLink>
+    </div>
+    <div class="main">
+      <RouterView v-slot="{ Component, route }">
+        <!-- I don't want to cache those page -->
+        <!-- <KeepAlive :include="cachedRoutes"> -->
+          <component :is="Component" :key="route.fullPath"></component>
+        <!-- </KeepAlive> -->
+      </RouterView>
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+
+const cachedRoutes = ref(['UserList', 'OrgListView', 'EntitlementListView', 'RoleListView']);
+
+</script>
+
+<style scoped lang="scss">
+@use '@/styles/style' as *;
+.main {
+  width: 100%;
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 0 0.5rem 2px rgba(0, 0, 0, 0.1);
+}
+.item {
+  background-color: white;
+  color: $primary-color;
+  padding: 0.5rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  border: 1px solid $primary-color;
+  box-shadow: 0 0 0.5rem 2px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: var(--ui-color-primary-100);
+  }
+  &.router-link-active {
+    color: white;
+    background-color: var(--ui-color-primary-500);
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+</style>

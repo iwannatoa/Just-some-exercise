@@ -12,15 +12,18 @@ export class NavBar extends React.Component {
   }
   render() {
     return (
-      <nav className="nav-group">
-        <NavLink to="/" className="nav-button">
+      <nav className='nav-group'>
+        <NavLink to='/' className='nav-button'>
           Home
         </NavLink>
-        <NavLink to="/sudoku" className="nav-button">
+        <NavLink to='/sudoku' className='nav-button'>
           Sudoku
         </NavLink>
-        <NavLink to="/reports" className="nav-button">
+        <NavLink to='/reports' className='nav-button'>
           Report
+        </NavLink>
+        <NavLink to='/chat-room' className='nav-button'>
+          Chat Room
         </NavLink>
       </nav>
     );

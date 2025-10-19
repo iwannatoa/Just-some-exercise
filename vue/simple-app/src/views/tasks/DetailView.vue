@@ -9,6 +9,7 @@ import { db } from '@/stores/db';
 
 const route = useRoute();
 const router = useRouter();
+
 const taskId = ref(0);
 const taskDetail = ref();
 const taskDb = db.task;
@@ -27,6 +28,7 @@ watchEffect(async () => {
 onMounted(() => {
   const id = +route.params.id;
   console.log(id);
+  console.log(window.history.state);
   if (id) {
     taskId.value = id;
   } else {
@@ -36,5 +38,13 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div></div>
+  <div>
+    <pre class="json">{{ JSON.stringify(taskDetail, undefined, '  ') }}</pre>
+  </div>
 </template>
+<style lang="scss">
+.json {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+</style>

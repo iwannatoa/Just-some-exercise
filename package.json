@@ -1,0 +1,41 @@
+{
+  "name": "just-some-exercise",
+  "version": "0.0.1",
+  "description": "Just some exercise",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "react/simple-app",
+    "vue/simple-app"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w react/simple-app\" \"npm run dev -w vue/simple-app\"",
+    "dev:all": "npm run dev -w react/simple-app && npm run dev -w vue/simple-app",
+    "dev:vue:simple": "npm run dev -w vue/simple-app",
+    "dev:react:simple": "npm run dev -w react/simple-app",
+    "build": "npm run build:react:simple && npm run build:vue:simple",
+    "build:react:simple": "npm run build -w react/simple-app",
+    "build:vue:simple": "npm run build -w vue/simple-app",
+    "lint": "npm run lint -w react/simple-app && npm run lint -w vue/simple-app",
+    "lint:react:simple": "npm run lint -w react/simple-app",
+    "lint:vue:simple": "npm run lint -w vue/simple-app",
+    "install:all": "npm install -w react/simple-app && npm install -w vue/simple-app"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iwannatoa/Just-some-exercise.git"
+  },
+  "keywords": [
+    "react",
+    "vue"
+  ],
+  "author": "Patrick Zhang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iwannatoa/Just-some-exercise/issues"
+  },
+  "homepage": "https://github.com/iwannatoa/Just-some-exercise#readme"
+}

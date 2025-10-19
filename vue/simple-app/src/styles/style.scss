@@ -1,0 +1,15 @@
+// --
+// Copyright © 2016-2025 Patrick Zhang.
+// All Rights Reserved.
+// --
+@use 'tailwindcss';
+
+@forward 'variables';
+
+@layer base {
+  button,
+  [role='button'] {
+    @apply cursor-pointer;
+    @apply disabled:cursor-not-allowed;
+  }
+}

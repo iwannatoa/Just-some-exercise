@@ -1,11 +1,7 @@
-<!--
- ~ Copyright © 2016-2025 Patrick Zhang.
- ~ All Rights Reserved.
- -->
 <script setup lang="ts">
 import MyLoading, { type Status } from '@/components/MyLoading.vue';
 import { db, type User } from '@/stores/db';
-import useUserStore from '@/stores/user';
+import useLocalUserStore from '@/stores/user';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -13,7 +9,7 @@ const status = ref<Status>('Loading');
 const userList = ref<User[]>([]);
 const items = ref<(User & { label: string })[]>([]);
 const selected = ref<number>();
-const userStore = useUserStore();
+const userStore = useLocalUserStore();
 
 const router = useRouter();
 

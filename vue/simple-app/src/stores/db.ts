@@ -4,7 +4,7 @@
  */
 import Dexie, { type EntityTable } from 'dexie';
 
-interface User {
+interface LocalUser {
   id?: number;
   name: string;
   entitlement: string;
@@ -44,7 +44,7 @@ interface Entitlement {
 }
 
 const db = new Dexie('simpleTaskDataBase') as Dexie & {
-  user: EntityTable<User, 'id'>;
+  user: EntityTable<LocalUser, 'id'>;
   task: EntityTable<Task, 'id'>;
   taskHistory: EntityTable<TaskHistory, 'id'>;
   workflow: EntityTable<Workflow, 'id'>;
@@ -142,5 +142,5 @@ async function initDB() {
 
 db.on('populate', () => initDB());
 
-export type { User, Task, TaskHistory, Workflow, Entitlement };
+export type { LocalUser as User, Task, TaskHistory, Workflow, Entitlement };
 export { db };

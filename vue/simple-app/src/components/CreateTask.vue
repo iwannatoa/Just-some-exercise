@@ -4,12 +4,12 @@
  -->
 <script lang="ts" setup>
 import { db, type Workflow, type Task } from '@/stores/db';
-import useUserStore from '@/stores/user';
+import useLocalUserStore from '@/stores/user';
 import { reactive, ref, watchEffect } from 'vue';
 import { from, Subject, takeUntil } from 'rxjs';
 import type { FormSubmitEvent } from '@nuxt/ui';
-import { useObservable } from '@vueuse/rxjs';
-const currentUser = useUserStore().userInfo.user!;
+
+const currentUser = useLocalUserStore().userInfo.user!;
 const workflows = ref<Workflow[]>([]);
 const users = ref<{ id: number; label: string }[]>([]);
 const state = reactive<Task>({
@@ -19,7 +19,7 @@ const state = reactive<Task>({
   creatorId: currentUser.id!,
   assigneeId: -1,
 });
-const emits = defineEmits<{ onSubmit: [value: Task] }>();
+const emits = defineEmits<{ submit: [value: Task] }>();
 const loading = ref(false);
 
 watchEffect((onCleanup) => {
@@ -29,7 +29,7 @@ watchEffect((onCleanup) => {
     .subscribe((items) => {
       workflows.value = items;
       // find the first status
-      const nextStatus = items.map((item) => item.next).flat();
+      const nextStatus = [...new Set(items.map((item) => item.next).flat())];
       const start = items.filter((item) => !nextStatus.includes(item.current))?.[0];
       if (start) {
         state.status = start.current;
@@ -50,7 +50,7 @@ watchEffect((onCleanup) => {
 
 function onSubmit(event: FormSubmitEvent<typeof state>) {
   loading.value = true;
-  emits('onSubmit', { ...event.data });
+  emits('submit', { ...event.data });
 }
 </script>
 
@@ -63,7 +63,7 @@ function onSubmit(event: FormSubmitEvent<typeof state>) {
       <UInput v-model="state.name"></UInput>
     </UFormField>
     <UFormField label="Assign" name="assigneeId">
-      <USelect v-model="state.assigneeId" value-key="id" placeholder="Select assignee" :items="users"></USelect>
+      <USelect v-model="state.assigneeId" valueKey="id" placeholder="Select assignee" :items="users"></USelect>
     </UFormField>
     <UButton :loading="loading" type="submit">Create</UButton>
   </UForm>
