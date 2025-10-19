@@ -23,10 +23,8 @@ const useUserService = defineStore('userService', () => {
   const loading = ref(false);
 
   const getUsers = async (): Promise<User[]> => {
-    console.log('getUsers');
     loading.value = true;
     const response = await httpClient.get<EntryListResponse<User>>('/user/api/user');
-    console.log('users', response);
     users.value = response.entries;
     loading.value = false;
     return users.value;

@@ -17,6 +17,8 @@ export default [
     route("result", "sudoku/result.tsx"),
   ]),
   ...prefix("reports", [index("./reports/home.tsx")]),
+  route("chat-room", "./chatRoom/chatRoom.tsx"),
 ] satisfies RouteConfig;
+
 
 

@@ -5,7 +5,7 @@
 import useOrgService, { type Organization } from '@/services/orgService';
 import type { TableColumn } from '@nuxt/ui';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onActivated, onDeactivated, onMounted, ref, watch } from 'vue';
 
 const orgService = useOrgService();
 const { organizations: orgs } = storeToRefs(orgService);
@@ -18,5 +18,13 @@ const columnDefs: TableColumn<Organization>[] = [
 ];
 onMounted(() => {
   orgService.getOrganizations();
+});
+
+onActivated(() => {
+  console.log('OrgListView activated');
+});
+
+onDeactivated(() => {
+  console.log('OrgListView deactivated');
 });
 </script>

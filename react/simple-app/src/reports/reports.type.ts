@@ -16,3 +16,5 @@ export type GridData = (number | string)[][];
 export type LanguageValue = {
   time: number;
 } & Record<string, number>;
+
+export type pageStatusType = "Loading" | "Success" | "Failed";

@@ -78,9 +78,6 @@ cd vue/simple-app && npm run build
 | `dev` | Start development servers for all projects |
 | `dev:react` | Start React development server |
 | `dev:vue` | Start Vue development server |
-| `build` | Build all projects |
-| `install:all` | Install dependencies for all projects |
-| `clean` | Clean build artifacts from all projects |
 
 ## Configuration
 

@@ -9,6 +9,7 @@
     "vue/simple-app"
   ],
   "scripts": {
+    "dev": "concurrently \"npm run dev -w react/simple-app\" \"npm run dev -w vue/simple-app\"",
     "dev:all": "npm run dev -w react/simple-app && npm run dev -w vue/simple-app",
     "dev:vue:simple": "npm run dev -w vue/simple-app",
     "dev:react:simple": "npm run dev -w react/simple-app",
@@ -17,7 +18,8 @@
     "build:vue:simple": "npm run build -w vue/simple-app",
     "lint": "npm run lint -w react/simple-app && npm run lint -w vue/simple-app",
     "lint:react:simple": "npm run lint -w react/simple-app",
-    "lint:vue:simple": "npm run lint -w vue/simple-app"
+    "lint:vue:simple": "npm run lint -w vue/simple-app",
+    "install:all": "npm install -w react/simple-app && npm install -w vue/simple-app"
   },
   "devDependencies": {
     "concurrently": "^8.0.0"

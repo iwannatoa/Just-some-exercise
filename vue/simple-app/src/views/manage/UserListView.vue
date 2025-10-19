@@ -5,7 +5,7 @@ import { useDialogService } from '@/services/dialogService';
 import useUserService, { type User } from '@/services/userService';
 import type { TableColumn } from '@nuxt/ui';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, watch, watchEffect } from 'vue';
+import { computed, onActivated, onDeactivated, onMounted, onRenderTracked, onRenderTriggered, watch, watchEffect } from 'vue';
 
 const userService = useUserService();
 const { users: userInfo, loading } = storeToRefs(userService);
@@ -25,28 +25,41 @@ const columnDefs: TableColumn<User>[] = [
   { accessorKey: 'orgnizations', header: 'Organizations' },
 ];
 
-
 function createNewUser() {
-  dialogService.open<boolean>(
-    CreateUserDialog,
-    {
+  dialogService
+    .open<boolean>(CreateUserDialog, {
       title: 'Create New User',
-      width: '40rem'
-    },
-  ).onClose((res?: boolean) => {
-    console.log('dialog closed', res);
-  });
+      width: '40rem',
+    })
+    .onClose((res?: boolean) => {
+      console.log('dialog closed', res);
+    });
 }
-watch(userInfo, (newVal, oldVal) => {
-  console.log('userInfo changed:', newVal, oldVal);
-}, { deep: true });
-
-watchEffect(() => {
-  console.log('loading state:', loading.value);
-})
 
 onMounted(() => {
   userService.getUsers();
+});
+
+watchEffect((cleanUp) => {
+  console.log(`UserListView: user count is ${count.value}`);
+  cleanUp(() => {
+    console.log('UserListView: cleanup effect');
+  });
+});
+
+watch(count, (newCount, oldCount, cleanUp) => {
+  console.log(`UserListView: user count changed from ${oldCount} to ${newCount}`);
+  cleanUp(() => {
+    console.log('UserListView: cleanup count watcher');
+  });
+});
+
+onRenderTracked((e) => {
+  console.log('UserListView: render tracked', e);
+});
+
+onRenderTriggered((e) => {
+  console.log('UserListView: render triggered', e);
 });
 </script>
 <template>

@@ -14,7 +14,7 @@ import {
 import { getData } from "./data";
 import type { EChartsOption, ToolboxComponentOption } from "echarts";
 import ReactECharts from "echarts-for-react";
-import type { GridData, KeyValueData, LanguageValue } from "./reports.type";
+import type { GridData, KeyValueData, pageStatusType } from "./reports.type";
 
 const ReportHome: FC<ReportHomeBean> = prop => {
   const updateGridOptions = (
@@ -40,7 +40,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
       series: series,
     };
   };
-  const [pageStatus, setPageStatus] = useState("Loading");
+  const [pageStatus, setPageStatus] = useState<pageStatusType>("Loading");
   const fullData = useRef({} as KeyValueData);
   const [gridOptions, setGridOptions] = useReducer(updateGridOptions, {
     legend: {},
@@ -98,7 +98,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   const eventDict: Record<string, Function> = {
     dataZoom: handleDataZoom,
   };
-  const memoriezed = useMemo(() => {
+  const memorized = useMemo(() => {
     return (
       <ReactECharts
         className="flex-none"
@@ -131,7 +131,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   return (
     <div className="h-full flex flex-col p-4 min-h-0">
       <h1 className="flex-none">Here we come</h1>
-      {memoriezed}
+      {memorized}
       <div className="flex flex-row">
         {(data.data.length > 0 && (
           <table className="flex-1 text-center bg-gray-50 min-h-0 overflow-auto">
