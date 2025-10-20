@@ -30,11 +30,13 @@ export default function useDraggable(
 
   useEffect(() => {
     const mouseUp = (e: MouseEvent) => {
+      if (!isDragging.current) return;
       isDragging.current = false;
       onEndRef.current();
       cleanUp();
     };
     const mouseDown = (e: MouseEvent) => {
+      window.addEventListener('mouseup', mouseUp);
       window.addEventListener('mousemove', mouseMove);
       window.addEventListener('mouseleave', mouseLeave);
       startPosition.current = { x: e.x, y: e.y };
@@ -55,14 +57,13 @@ export default function useDraggable(
     };
 
     const cleanUp = () => {
+      window.removeEventListener('mouseup', mouseUp);
       window.removeEventListener('mousemove', mouseMove);
       window.removeEventListener('mouseleave', mouseLeave);
     };
-    window.addEventListener('mouseup', mouseUp);
     el.current?.addEventListener('mousedown', mouseDown);
     return () => {
       cleanUp();
-      window.removeEventListener('mouseup', mouseUp);
       el.current?.removeEventListener('mousedown', mouseDown);
     };
   }, [el]);
