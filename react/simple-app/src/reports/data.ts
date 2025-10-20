@@ -3,10 +3,10 @@
  * All Rights Reserved.
  */
 
-import type { GridData, KeyValueData } from "./reports.type";
+import type { GridData, KeyValueData } from './reports.type';
 
 export function getData(startDate: Date, endDate: Date, count = 100) {
-  const types = ["Java", "React", "Vue", "Angular", "Python", "g++"];
+  const types = ['Java', 'React', 'Vue', 'Angular', 'Python', 'g++'];
   const data: KeyValueData = {
     categories: types,
     data: [],
@@ -34,7 +34,7 @@ function delayPromise<T>(
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      shouldReject ? reject(new Error("Rejected")) : resolve(value);
+      shouldReject ? reject(new Error('Rejected')) : resolve(value);
     }, time);
   });
 }

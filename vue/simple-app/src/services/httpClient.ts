@@ -28,7 +28,7 @@ const useHttpClient = defineStore('httpClient', () => {
     return response.json();
   }
   function get<T>(endpoint: string, config?: RequestInit): Promise<T> {
-    return this.request(endpoint, { ...config, method: 'GET' });
+    return request(endpoint, { ...config, method: 'GET' });
   }
   function post<T>(endpoint: string, body: unknown, config?: RequestInit): Promise<T> {
     return request(endpoint, {

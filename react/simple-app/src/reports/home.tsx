@@ -10,11 +10,11 @@ import {
   useRef,
   useState,
   type FC,
-} from "react";
-import { getData } from "./data";
-import type { EChartsOption, ToolboxComponentOption } from "echarts";
-import ReactECharts from "echarts-for-react";
-import type { GridData, KeyValueData, pageStatusType } from "./reports.type";
+} from 'react';
+import { getData } from './data';
+import type { EChartsOption, ToolboxComponentOption } from 'echarts';
+import ReactECharts from 'echarts-for-react';
+import type { GridData, KeyValueData, pageStatusType } from './reports.type';
 
 const ReportHome: FC<ReportHomeBean> = prop => {
   const updateGridOptions = (
@@ -23,11 +23,11 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   ): EChartsOption => {
     const series = data.categories.map(type => {
       return {
-        type: "line",
+        type: 'line',
         name: type,
         smooth: true,
-        dimensions: ["time", type],
-        stack: "Total",
+        dimensions: ['time', type],
+        stack: 'Total',
         areaStyle: {},
         showSymbol: false,
       };
@@ -40,28 +40,28 @@ const ReportHome: FC<ReportHomeBean> = prop => {
       series: series,
     };
   };
-  const [pageStatus, setPageStatus] = useState<pageStatusType>("Loading");
+  const [pageStatus, setPageStatus] = useState<pageStatusType>('Loading');
   const fullData = useRef({} as KeyValueData);
   const [gridOptions, setGridOptions] = useReducer(updateGridOptions, {
     legend: {},
     tooltip: {
-      trigger: "axis",
+      trigger: 'axis',
     },
     dataset: {
       source: [],
     },
     yAxis: {},
     xAxis: {
-      type: "time",
+      type: 'time',
     },
-    dataZoom: { type: "inside" },
+    dataZoom: { type: 'inside' },
     series: [],
     toolbox: {
       right: 128,
       itemSize: 16,
       feature: {
         dataZoom: {
-          yAxisIndex: "none",
+          yAxisIndex: 'none',
         },
       },
     } as ToolboxComponentOption,
@@ -104,7 +104,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
         className='flex-none'
         option={gridOptions}
         lazyUpdate={true}
-        showLoading={pageStatus === "Loading"}
+        showLoading={pageStatus === 'Loading'}
         onEvents={eventDict}
       />
     );
@@ -118,10 +118,10 @@ const ReportHome: FC<ReportHomeBean> = prop => {
         setGridOptions(data);
         fullData.current = data;
         setData({ start, end });
-        setPageStatus("Success");
+        setPageStatus('Success');
       })
       .catch(() => {
-        setPageStatus("Failed");
+        setPageStatus('Failed');
       });
     return () => {
       isMounted.current = false;
@@ -151,7 +151,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
             ))}
           </table>
         )) ||
-          (pageStatus === "Failed" && <div>Load data failed</div>)}
+          (pageStatus === 'Failed' && <div>Load data failed</div>)}
       </div>
     </div>
   );

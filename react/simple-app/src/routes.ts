@@ -8,14 +8,21 @@ import {
   layout,
   prefix,
   route,
-} from "@react-router/dev/routes";
+} from '@react-router/dev/routes';
 
 export default [
-  index("./app.tsx"),
-  route("sudoku", "./sudoku/home.tsx", [
-    index("./sudoku/input.tsx"),
-    route("result", "sudoku/result.tsx"),
+  index('./app.tsx'),
+  route('sudoku', './sudoku/home.tsx', [
+    index('./sudoku/input.tsx'),
+    route('result', 'sudoku/result.tsx'),
   ]),
-  ...prefix("reports", [index("./reports/home.tsx")]),
-  route("chat-room", "./chatRoom/chatRoom.tsx"),
+  ...prefix('reports', [index('./reports/home.tsx')]),
+  route('chat-room', './chatRoom/chatRoom.tsx'),
 ] satisfies RouteConfig;
+
+export const ROUTE_NAME_MAP: Record<string, string> = {
+  '': 'Home',
+  sudoku: 'Sudoku',
+  reports: 'Report',
+  'chat-room': 'Chat Room',
+};

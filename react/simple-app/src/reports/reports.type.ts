@@ -17,4 +17,4 @@ export type LanguageValue = {
   time: number;
 } & Record<string, number>;
 
-export type pageStatusType = "Loading" | "Success" | "Failed";
+export type pageStatusType = 'Loading' | 'Success' | 'Failed';
