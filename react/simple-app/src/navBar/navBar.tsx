@@ -9,12 +9,11 @@ import routeConfig, { ROUTE_NAME_MAP } from '../routes';
 export class NavBar extends React.Component {
   routes = routeConfig;
   routeNameMap = ROUTE_NAME_MAP;
+
   navClass(isActive: boolean, isPending: boolean) {
     return (isPending ? 'pending' : isActive ? 'active' : '') + ' nav-button';
   }
-  componentDidMount(): void {
-    console.log('routes', this.routes);
-  }
+
   render() {
     return (
       <nav className='nav-group'>
@@ -25,8 +24,8 @@ export class NavBar extends React.Component {
               name: this.routeNameMap[route.path ?? ''],
             };
           })
-          .map(item => (
-            <NavLink to={item.to} className='nav-button'>
+          .map((item, index) => (
+            <NavLink to={item.to} key={index} className='nav-button'>
               {item.name}
             </NavLink>
           ))}

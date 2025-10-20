@@ -3,7 +3,7 @@
  * All Rights Reserved.
  */
 
-import type { GridData, KeyValueData } from './reports.type';
+import type { KeyValueData } from './reports.type';
 
 export function getData(startDate: Date, endDate: Date, count = 100) {
   const types = ['Java', 'React', 'Vue', 'Angular', 'Python', 'g++'];
