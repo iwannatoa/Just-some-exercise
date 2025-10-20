@@ -22,6 +22,9 @@ export default function ItemDiv({
   const [dy, setDy] = useState(0);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
+  const [finalX, setFinalX] = useState(0);
+  const [finalY, setFinalY] = useState(0);
+
   useDraggable(elRef, {
     bounds: containerRect ? { ...containerRect } : {},
     onStart: () => {
@@ -36,30 +39,38 @@ export default function ItemDiv({
       }
     },
     onDrag: ({ dx, dy }: { dx: number; dy: number }) => {
-      if (dx + x < 0) {
+      const tempX = dx + x + finalX;
+      const tempY = dy + y + finalY;
+      if (tempX < 0) {
         setDx(0);
-      } else if (dx + x > maxX) {
+      } else if (tempX > maxX) {
         setDx(maxX);
       } else {
-        setDx(dx + x);
+        setDx(tempX);
       }
-      if (dy + y < 0) {
+      if (tempY < 0) {
         setDy(0);
-      } else if (dy + y > maxY) {
+      } else if (tempY > maxY) {
         setDy(maxY);
       } else {
-        setDy(dy + y);
+        setDy(tempY);
       }
     },
-    onEnd: () => onEnd?.(id),
+    onEnd: () => {
+      setFinalX(fx => fx + dx);
+      setFinalY(fy => fy + dy);
+      setDx(0);
+      setDy(0);
+    },
   });
   return (
     <div
       ref={elRef}
       className='absolute border-2'
       style={{
-        left: dx,
-        top: dy,
+        left: finalX,
+        top: finalY,
+        transform: `translate3d(${dx}px, ${dy}px , 0)`,
       }}
     >
       <div className='select-none'>Item {id}</div>
