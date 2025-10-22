@@ -19,6 +19,7 @@ export default [
   ...prefix('reports', [index('./reports/home.tsx')]),
   route('chat-room', './chatRoom/chatRoom.tsx'),
   route('play-ground', './playGround/playGround.tsx'),
+  route('restaurant', './restaurant/view/Restaurant.tsx'),
 ] satisfies RouteConfig;
 
 export const ROUTE_NAME_MAP: Record<string, string> = {
@@ -27,4 +28,5 @@ export const ROUTE_NAME_MAP: Record<string, string> = {
   reports: 'Report',
   'chat-room': 'Chat Room',
   'play-ground': 'Play Ground',
+  restaurant: 'Restaurant',
 };
