@@ -38,18 +38,24 @@ export default function Kitchen() {
           <div className='text-xs font-medium text-slate-800'>
             {menuMap.get(menuId)?.name || menuId}
           </div>
-          <div className='text-[10px] text-slate-600'>{percent}%</div>
+          <div className='text-[10px] text-slate-600'>
+            <span
+              className='number-counter'
+              style={{ '--num': percent } as React.CSSProperties}
+            />
+            %
+          </div>
         </div>
 
         <div className='mt-1 h-2 w-full bg-gray-200 rounded overflow-hidden'>
           <div
-            className={`h-full ${cls.bar}`}
+            className={`h-full transition-all duration-1000 ease-out ${cls.bar}`}
             style={{ width: `${percent}%` }}
           />
         </div>
 
         <div className='mt-1 text-[10px] text-slate-600'>
-          {done}/{total} — {(task as any).status}
+          {(task as any).status}
         </div>
 
         {/* order id bottom-right */}
@@ -63,10 +69,10 @@ export default function Kitchen() {
   };
 
   return (
-    <div className='flex-1 border-2 border-rose-500 p-2 text-sm'>
+    <div className='flex-none overflow-auto border-2 border-rose-500 p-2 text-sm'>
       <h2 className='mb-2 text-sm font-semibold'>Kitchen</h2>
 
-      <div className='grid grid-cols-4 gap-4 h-full'>
+      <div className='grid grid-cols-4 gap-4 '>
         <div className='flex flex-col col-span-3'>
           <h3 className='text-xs font-semibold mb-2 bg-emerald-100 px-2 py-1 rounded text-emerald-800'>
             Active

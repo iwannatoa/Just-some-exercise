@@ -13,7 +13,7 @@
 button {
   @apply bg-gray-50 hover:bg-gray-200 text-sky-500 py-2 border-sky-500 border-2 px-4 rounded-3xl cursor-pointer;
 
-  &.primary{
+  &.primary {
     @apply bg-sky-500 hover:bg-sky-700 text-white py-2 px-4 border-0 rounded-3xl cursor-pointer;
   }
 }
@@ -26,3 +26,24 @@ body {
     color-scheme: dark;
   }
 }
+
+
+@property --seed {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 0;
+}
+@keyframes seed {
+  from {
+    --seed: 0;
+  }
+  to {
+    --seed: 100;
+  }
+}
+.number-counter::before {
+  counter-reset: num calc(var(--seed) * var(--num) / 100);
+  content: counter(num);
+  animation: seed 1s forwards;
+}
+

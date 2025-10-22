@@ -64,14 +64,14 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
           return task;
         }
 
-        const newProcess = task.process + task.speed;
-        const newStatus = newProcess >= 100 ? 'COMPLETE' : 'ACTIVE';
+        const newStatus = task.process >= 100 ? 'COMPLETE' : 'ACTIVE';
         if (newStatus === 'COMPLETE') {
           for (let orderId of task.orderIds) {
             useOrderStore.getState().deliverFood(orderId, task.menuId);
           }
         }
 
+        const newProcess = task.process + task.speed;
         return {
           ...task,
           process: Math.min(newProcess, 100),
@@ -90,6 +90,7 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
         activeTaskCount < state.maxConcurrentTasks &&
         pendingTasks.length > 0
       ) {
+        pendingTasks.sort((a, b) => b.count - a.count);
         const tasksToActivate = pendingTasks.slice(
           0,
           state.maxConcurrentTasks - activeTaskCount,
@@ -97,7 +98,7 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
 
         finalTasks = updatedTasks.map(task => {
           if (tasksToActivate.some(t => t.taskId === task.taskId)) {
-            return { ...task, status: 'ACTIVE' as const };
+            return { ...task, status: 'ACTIVE' };
           }
           return task;
         });
@@ -115,6 +116,9 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
       const currentTasks = [...state.tasks];
       const newTasks: CookTask[] = [];
 
+      let activeTaskCount = currentTasks.filter(
+        t => t.status === 'ACTIVE',
+      ).length;
       // handle each item in the order
       order.items.forEach(item => {
         let remainingQuantity = item.quantity;
@@ -152,11 +156,8 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
 
         // create new task for remaining quantity
         if (remainingQuantity > 0) {
-          const activeTaskCount = currentTasks.filter(
-            t => t.status === 'ACTIVE',
-          ).length;
           const initialStatus =
-            activeTaskCount < state.maxConcurrentTasks ? 'ACTIVE' : 'PENDING';
+            activeTaskCount++ < state.maxConcurrentTasks ? 'ACTIVE' : 'PENDING';
 
           const task: CookTask = {
             taskId: idFactory.getNewIdByType('cookTask'),

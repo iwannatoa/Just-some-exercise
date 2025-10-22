@@ -24,22 +24,24 @@ export const useLobbyStore = create<LobbyStore>((set, get) => ({
     const newCustomersCount =
       waitingCount > 10
         ? 0
-        : Math.max(3, Math.floor(Math.random() * (freeSlots * 2 + 5)));
+        : Math.min(10, Math.floor(Math.random() * (freeSlots * 2 + 1)));
     const newCustomerList = useCustomerStore
       .getState()
       .addNewCustomers(newCustomersCount);
-    set(state => {
-      return { waitingLine: [...state.waitingLine, ...newCustomerList] };
-    });
-    if (get().waitingLine.length > 0) {
-      const firstNewCustomer = get().waitingLine[0];
-      if (useTableStore.getState().seatCustomer(firstNewCustomer)) {
-        set(state => {
-          const newLine = [...state.waitingLine];
-          newLine.shift();
-          return { waitingLine: newLine };
-        });
+    const newWaitingLine = [...get().waitingLine, ...newCustomerList];
+    if (newWaitingLine.length > 0) {
+      const seatCustomerCount = Math.floor(
+        Math.random() * Math.min(newWaitingLine.length, 5),
+      );
+      for (let i = 0; i < seatCustomerCount; i++) {
+        const firstNewCustomer = newWaitingLine[0];
+        if (useTableStore.getState().seatCustomer(firstNewCustomer)) {
+          newWaitingLine.shift();
+        }
       }
     }
+    set(state => {
+      return { waitingLine: newWaitingLine };
+    });
   },
 }));
