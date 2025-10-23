@@ -1,9 +1,4 @@
-export type CustomerStatus =
-  | 'WAITING_TABLE'
-  | 'ORDERING'
-  // | 'WAITING_FOOD'
-  | 'HAVING_MEAL'
-  | 'FINISHED';
+export type CustomerStatus = 'WAITING_TABLE' | 'ORDERING' | 'HAVING_MEAL' | 'FINISHED';
 export interface Customer {
   id: string;
   count: number;

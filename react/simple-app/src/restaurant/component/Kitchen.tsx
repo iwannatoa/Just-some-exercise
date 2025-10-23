@@ -1,10 +1,15 @@
-import useKitchenStore, { type CookTask } from '../store/kitchen.store';
+import { useRef } from 'react';
+import useKitchenStore, {
+  type Cook,
+  type CookTask,
+} from '../store/kitchen.store';
 import { useMenuStore } from '../store/menu.store';
+import Process from './Process';
 
 export default function Kitchen() {
-  const tasks = useKitchenStore(state => state.tasks ?? []);
-  const activeTasks = tasks.filter(t => t.status === 'ACTIVE');
-  const pendingTasks = tasks.filter(t => t.status === 'PENDING');
+  const kitchenStore = useKitchenStore();
+  const cooks = kitchenStore.cooks;
+  const pendingTasks = kitchenStore.getPendingTasks();
   const menuMap = useMenuStore().menu;
 
   const progressClasses = (percent: number) => {
@@ -20,7 +25,35 @@ export default function Kitchen() {
     return { card: 'bg-rose-50 border-rose-200', bar: 'bg-rose-500' };
   };
 
-  const renderTask = (task: CookTask, idx: number) => {
+  const renderCook = (cook: Cook) => {
+    if (cook.task) {
+      return renderTask(cook.task, cook.cookId);
+    }
+
+    // 厨师没有任务时的渲染
+    return (
+      <div
+        key={cook.cookId}
+        className='relative p-2 border rounded text-xs bg-gray-50 border-gray-200 border-opacity-80 shadow-sm'
+      >
+        <div className='flex justify-between items-baseline'>
+          <div className='text-xs font-medium text-slate-500'>Pending</div>
+          <div className='text-[10px] text-slate-400'>0%</div>
+        </div>
+
+        <div className='mt-1 h-2 w-full bg-gray-200 rounded overflow-hidden'>
+          <div className='h-full bg-gray-300' style={{ width: '0%' }} />
+        </div>
+
+        <div className='mt-1 text-[10px] text-slate-400'>Waiting for Task</div>
+
+        <div className='absolute bottom-1 right-2 text-[10px] text-slate-300'>
+          {cook.cookId}
+        </div>
+      </div>
+    );
+  };
+  const renderTask = (task: CookTask, key?: string) => {
     const menuId = task.menuId ?? '';
     const total = 100;
     const done = task.process;
@@ -31,20 +64,18 @@ export default function Kitchen() {
 
     return (
       <div
-        key={task.taskId}
+        key={key || task.taskId}
         className={`relative p-2 border rounded text-xs ${cls.card} border-opacity-80 shadow-sm`}
       >
         <div className='flex justify-between items-baseline'>
           <div className='text-xs font-medium text-slate-800'>
             {menuMap.get(menuId)?.name || menuId}
           </div>
-          <div className='text-[10px] text-slate-600'>
-            <span
-              className='number-counter'
-              style={{ '--num': percent } as React.CSSProperties}
-            />
-            %
-          </div>
+          <Process
+            className='text-[10px] text-slate-600'
+            format={val => `${val}%`}
+            value={percent}
+          ></Process>
         </div>
 
         <div className='mt-1 h-2 w-full bg-gray-200 rounded overflow-hidden'>
@@ -78,10 +109,10 @@ export default function Kitchen() {
             Active
           </h3>
           <div className='gap-2 grid grid-cols-3'>
-            {activeTasks.length === 0 && (
+            {cooks.length === 0 && (
               <div className='text-xs text-gray-500'>No active tasks</div>
             )}
-            {activeTasks.map((t, i) => renderTask(t, i))}
+            {cooks.map(cook => renderCook(cook))}
           </div>
         </div>
 
@@ -96,7 +127,7 @@ export default function Kitchen() {
             )}
             {pendingTasks.map((t, i) => (
               <div key={(t as any).id ?? `pending-${i}`} className='text-xs'>
-                {renderTask(t, i)}
+                {renderTask(t)}
               </div>
             ))}
           </div>

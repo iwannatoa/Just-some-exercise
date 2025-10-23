@@ -7,6 +7,8 @@ import useKitchenStore from './kitchen.store';
 
 // TODO add dinning room store to deal with the table.
 // Currently there's only one area.
+
+const TABLE_PREFIX = 'T';
 export interface TableStore {
   tables: Map<string, Table>;
   findEmptyTable: () => Table | null;
@@ -50,7 +52,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
       const newTables = new Map(state.tables);
 
       for (let i = 0; i < count; i++) {
-        const tableNo = idFactory.getNewIdByType('T');
+        const tableNo = idFactory.getNewIdByType(TABLE_PREFIX);
         const newTable: Table = {
           tableNo,
           status: 'EMPTY',
@@ -106,6 +108,7 @@ export const useTableStore = create<TableStore>((set, get) => ({
     });
   },
   clearAll: () => {
+    idFactory.resetTheCounter(TABLE_PREFIX);
     set(state => ({ tables: new Map() }));
   },
   nextRound: () => {

@@ -1,36 +1,47 @@
 import Customer from './Customer';
 import { useOrderStore } from '../store/order.store';
-import type { OrderItem } from '../store/data.type';
+import type {
+  CustomerStatus,
+  OrderItem,
+  Table,
+  TableStatus,
+} from '../store/data.type';
 import { useMenuStore } from '../store/menu.store';
+import Process from './Process';
+import SpinnerProcess from './SpinnerProcess';
+import StatusIcon from './StatusIcon';
 
 export interface TableCardProps {
-  table: any;
+  table: Table;
 }
 
 export default function TableCard({ table }: TableCardProps) {
   const orderStore = useOrderStore();
 
-  const statusBadge = (status: string) => {
-    const base =
-      'inline-block px-2 py-0.5 text-xs font-medium rounded-full shadow-sm';
-    switch (status) {
-      case 'WAITING_FOR_ORDER':
-        return (
-          <span className={base + ' bg-yellow-100 text-yellow-800'}>
-            {status}
-          </span>
-        );
-      case 'HAVING_MEAL':
-        return (
-          <span className={base + ' bg-emerald-100 text-emerald-800'}>
-            {status}
-          </span>
-        );
-      default:
-        return (
-          <span className={base + ' bg-gray-100 text-gray-700'}>{status}</span>
-        );
-    }
+  const statusIcon = (status: TableStatus) => {
+    const getIconClasses = (status: TableStatus): string => {
+      const base = 'w-5 h-5';
+      switch (status) {
+        case 'WAITING_FOR_ORDER':
+          return `${base} text-yellow-500`;
+        case 'HAVING_MEAL':
+          return `${base} text-green-500`;
+        case 'EMPTY':
+          return `${base} text-gray-400`;
+        case 'WAITING_FOR_CLEAN':
+          return `${base} text-orange-500`;
+        default:
+          return `${base} text-gray-500`;
+      }
+    };
+
+    return (
+      <StatusIcon
+        className={getIconClasses(status)}
+        status={status}
+        type='TABLE'
+      />
+    );
   };
 
   const items = orderStore
@@ -69,8 +80,7 @@ export default function TableCard({ table }: TableCardProps) {
 
           {extraIndicator ? (
             <div className='text-[10px] text-gray-500 ml-1'>
-              {' '}
-              {extraIndicator}{' '}
+              &nbsp;{extraIndicator}&nbsp;
             </div>
           ) : null}
         </div>
@@ -80,9 +90,12 @@ export default function TableCard({ table }: TableCardProps) {
 
   return (
     <div className='p-2 rounded-lg border bg-white shadow-sm flex flex-col gap-2'>
-      <div className='flex-none flex justify-between items-start'>
-        <div className='text-sm font-semibold'>Table {table.tableNo}</div>
-        {statusBadge(table.status)}
+      <div className='flex-none flex justify-between items-center'>
+        <div className='flex items-center gap-2'>
+          <div className='text-sm font-semibold'>{table.tableNo}</div>
+          <SpinnerProcess value={table.process} />
+        </div>
+        {statusIcon(table.status)}
       </div>
 
       <div className='flex-none min-h-[44px]'>
@@ -100,11 +113,6 @@ export default function TableCard({ table }: TableCardProps) {
         ) : (
           items.map(renderItemRow)
         )}
-      </div>
-
-      <div className='flex flex-none items-center justify-between mt-2'>
-        <span className='text-xs text-gray-600'>{table.process}</span>
-        <span className='text-xs text-gray-500'>Table #{table.tableNo}</span>
       </div>
     </div>
   );

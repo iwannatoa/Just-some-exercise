@@ -11,6 +11,10 @@ class IdFactory {
     return this._instance;
   }
 
+  resetTheCounter(type: string) {
+    this.counters[type] = 0;
+  }
+
   // 添加新 type 或设置起始值（下次 get 将返回 start+1）
   addType(type: string, start = 0): void {
     if (!type) throw new Error('type required');

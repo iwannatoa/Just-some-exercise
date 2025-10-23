@@ -14,7 +14,10 @@ export interface CookTask {
   menuId: string;
   orderIds: string[];
 }
-
+export interface Cook {
+  cookId: string;
+  task?: CookTask;
+}
 /**
  * Kitchen Store
  *
@@ -23,15 +26,15 @@ export interface CookTask {
 export interface KitchenStore {
   tasks: CookTask[];
   mergeableTaskMap: Map<string, CookTask[]>;
-  maxConcurrentTasks: number;
+  cooks: Cook[];
   nextRound: () => void;
   addOrder: (order: Order) => void;
   removeCompletedTasks: () => void;
-  getActiveTasks: () => CookTask[];
+  getActiveTasks: () => (CookTask | undefined)[];
   getPendingTasks: () => CookTask[];
   getTasksByOrderId: (orderId: string) => CookTask[];
   getTasksByMenuId: (menuId: string) => CookTask[];
-  setMaxConcurrentTasks: (num: number) => void;
+  initCooks: (num: number) => void;
   mergeTasks: (targetTaskId: string, sourceTaskId: string) => void;
   _updateMergeableMap: (tasks: CookTask[]) => void;
 }
@@ -39,7 +42,7 @@ export interface KitchenStore {
 const useKitchenStore = create<KitchenStore>((set, get) => ({
   tasks: [],
   mergeableTaskMap: new Map(),
-  maxConcurrentTasks: 3,
+  cooks: [],
 
   _updateMergeableMap: (tasks: CookTask[]) => {
     const mergeableTaskMap = new Map<string, CookTask[]>();
@@ -70,6 +73,12 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
             useOrderStore.getState().deliverFood(orderId, task.menuId);
           }
         }
+        for (let cook of state.cooks) {
+          if (cook.task?.taskId === task.taskId) {
+            cook.task = task;
+            break;
+          }
+        }
 
         const newProcess = task.process + task.speed;
         return {
@@ -80,29 +89,30 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
       });
 
       // check if there are pending tasks that can be activated
-      const activeTaskCount = updatedTasks.filter(
-        t => t.status === 'ACTIVE',
-      ).length;
+      const cooks = [...state.cooks];
       const pendingTasks = updatedTasks.filter(t => t.status === 'PENDING');
-
-      let finalTasks = updatedTasks;
-      if (
-        activeTaskCount < state.maxConcurrentTasks &&
-        pendingTasks.length > 0
-      ) {
-        pendingTasks.sort((a, b) => b.count - a.count);
-        const tasksToActivate = pendingTasks.slice(
-          0,
-          state.maxConcurrentTasks - activeTaskCount,
-        );
-
-        finalTasks = updatedTasks.map(task => {
-          if (tasksToActivate.some(t => t.taskId === task.taskId)) {
-            return { ...task, status: 'ACTIVE' };
+      const tasksToActivate: CookTask[] = [];
+      pendingTasks.sort((a, b) => b.count - a.count);
+      cooks.forEach(cook => {
+        if (!cook.task) {
+          const newActiveTask = pendingTasks.shift();
+          if (newActiveTask) {
+            cook.task = { ...newActiveTask, status: 'ACTIVE' };
+            tasksToActivate.push(newActiveTask);
           }
-          return task;
-        });
-      }
+        } else if (cook.task.status === 'COMPLETE') {
+          cook.task = undefined;
+        } else if (cook.task.process >= 100) {
+          cook.task.status = 'COMPLETE';
+        }
+      });
+
+      let finalTasks: CookTask[] = updatedTasks.map(task => {
+        if (tasksToActivate.some(t => t.taskId === task.taskId)) {
+          return { ...task, status: 'ACTIVE' };
+        }
+        return task;
+      });
 
       get()._updateMergeableMap(finalTasks);
 
@@ -157,7 +167,7 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
         // create new task for remaining quantity
         if (remainingQuantity > 0) {
           const initialStatus =
-            activeTaskCount++ < state.maxConcurrentTasks ? 'ACTIVE' : 'PENDING';
+            activeTaskCount++ < state.cooks.length ? 'ACTIVE' : 'PENDING';
 
           const task: CookTask = {
             taskId: idFactory.getNewIdByType('cookTask'),
@@ -196,11 +206,13 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
   },
 
   getActiveTasks: () => {
-    return get().tasks.filter(task => task.status === 'ACTIVE');
+    return get().cooks.map(cook => cook.task);
   },
 
   getPendingTasks: () => {
-    return get().tasks.filter(task => task.status === 'PENDING');
+    const tasks = get().tasks.filter(task => task.status === 'PENDING');
+    tasks.sort((a, b) => b.count - a.count);
+    return tasks;
   },
 
   getTasksByOrderId: (orderId: string) => {
@@ -248,10 +260,15 @@ const useKitchenStore = create<KitchenStore>((set, get) => ({
       return { tasks: allTasks };
     });
   },
-  setMaxConcurrentTasks: (num: number) => {
-    set(state => ({
-      maxConcurrentTasks: num,
-    }));
+  initCooks: (num: number) => {
+    set(() => {
+      const cooks: Cook[] = [];
+      for (let i = 0; i < num; i++) {
+        const cookId = idFactory.getNewIdByType('Cook');
+        cooks.push({ cookId });
+      }
+      return { cooks };
+    });
   },
 }));
 

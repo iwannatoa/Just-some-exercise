@@ -1,4 +1,5 @@
-import type { Customer } from '../store/data.type';
+import type { Customer, CustomerStatus } from '../store/data.type';
+import StatusIcon from './StatusIcon';
 
 export interface CustomerProps {
   customer: Customer;
@@ -9,17 +10,15 @@ export default function Customer({
   customer,
   showStatus = true,
 }: CustomerProps) {
-  const statusClass = (s: string) => {
+  const statusClass = (s: CustomerStatus) => {
     switch (s) {
-      case 'WAITING_FOR_ORDER':
+      case 'ORDERING':
         return 'bg-yellow-100 text-yellow-800';
       case 'HAVING_MEAL':
         return 'bg-emerald-100 text-emerald-800';
-      case 'SEATED':
-        return 'bg-blue-100 text-blue-800';
-      case 'VIP':
+      case 'FINISHED':
         return 'bg-pink-100 text-pink-800';
-      default:
+      case 'WAITING_TABLE':
         return 'bg-gray-100 text-gray-700';
     }
   };
@@ -46,7 +45,7 @@ export default function Customer({
             customer.status,
           )} font-medium flex-shrink-0`}
         >
-          {customer.status}
+          <StatusIcon type='CUSTOMER' status={customer.status} />
         </div>
       )}
     </div>

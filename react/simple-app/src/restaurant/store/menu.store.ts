@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { MenuItem } from './data.type';
 import idFactory from './idFactory';
 
+const MENU_PREFIX = 'menu';
 export interface MenuStore {
   clearAll: () => void;
   menu: Map<string, MenuItem>;
@@ -11,7 +12,7 @@ export interface MenuStore {
 export const useMenuStore = create<MenuStore>((set, get) => ({
   menu: new Map(),
   add: (item: MenuItem) => {
-    const id = idFactory.getNewIdByType('menu');
+    const id = idFactory.getNewIdByType(MENU_PREFIX);
     set(state => {
       item.id = id;
       state.menu.set(id, item);
@@ -26,6 +27,7 @@ export const useMenuStore = create<MenuStore>((set, get) => ({
       return { menu: state.menu };
     }),
   clearAll: () => {
+    idFactory.resetTheCounter(MENU_PREFIX);
     set(state => {
       return { menu: new Map() };
     });

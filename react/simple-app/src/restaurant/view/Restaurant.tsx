@@ -54,7 +54,7 @@ export default function Restaurant() {
       });
     });
     tableStore.addTable(30);
-    kitchenStore.setMaxConcurrentTasks(9);
+    kitchenStore.initCooks(9);
 
     return () => {
       tableStore.clearAll();
@@ -64,12 +64,24 @@ export default function Restaurant() {
   }, []);
 
   return (
-    <div className='flex flex-col h-full gap-1 p-2'>
-      <div className='flex flex-none flex-row justify-between'>
-        <h1 className='flex-none'>Restaurant</h1>
-        <div className='flex-none'>
-          <button onClick={start}>Start</button>
-          <button onClick={stop}>Stop</button>
+    <div className='flex flex-col h-full gap-4 p-4 bg-gradient-to-br from-gray-50 to-white'>
+      <div className='flex flex-none flex-row justify-between items-center bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200'>
+        <h1 className='flex-none text-lg font-semibold text-gray-800'>
+          🍽️ Restaurant Dashboard
+        </h1>
+        <div className='flex-none flex gap-2'>
+          <button
+            onClick={start}
+            className='px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-md transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+          >
+            ▶️ Start
+          </button>
+          <button
+            onClick={stop}
+            className='px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-md transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+          >
+            ⏹️ Stop
+          </button>
         </div>
       </div>
       <Entrance></Entrance>

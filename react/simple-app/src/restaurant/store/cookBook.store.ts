@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { CookBookItem } from './data.type';
 import idFactory from './idFactory';
 
+const COOKBOOK_PREFIX = 'CookBook';
 export interface CookBookStore {
   clearAll: () => void;
   cookBooks: Map<string, CookBookItem>;
@@ -24,7 +25,7 @@ export const useCookBookStore = create<CookBookStore>((set, get) => ({
   },
   add: (item: CookBookItem) =>
     set(state => {
-      const id = idFactory.getNewIdByType('CookBook');
+      const id = idFactory.getNewIdByType(COOKBOOK_PREFIX);
       const updatedCookbooks = new Map(state.cookBooks);
       const newItem = { ...item, id };
       updatedCookbooks.set(newItem.menuId, newItem);
@@ -39,6 +40,7 @@ export const useCookBookStore = create<CookBookStore>((set, get) => ({
   },
   getByMenuId: (id: string) => get().cookBooks.get(id),
   clearAll: () => {
+    idFactory.resetTheCounter(COOKBOOK_PREFIX);
     set(state => ({
       cookBooks: new Map(),
     }));
