@@ -14,7 +14,7 @@ import {
 import { getData } from './data';
 import type { EChartsOption, ToolboxComponentOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
-import type { GridData, KeyValueData, pageStatusType } from './reports.type';
+import type { KeyValueData, pageStatusType } from './reports.type';
 
 const ReportHome: FC<ReportHomeBean> = prop => {
   const updateGridOptions = (
