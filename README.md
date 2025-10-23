@@ -98,7 +98,10 @@ After starting development servers:
 - React App: http://localhost:5172
 - Vue App: http://localhost:5173
 
-
+## Future Plan
+- [ ] Electron
+- [ ] express
+- [ ] flutter
 
 ## License
 
