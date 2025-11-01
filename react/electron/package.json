@@ -1,0 +1,32 @@
+{
+  "name": "bulk-file-configurable-move",
+  "version": "0.0.1",
+  "description": "Move multi file to separate dir",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently \"npm run react-dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "react-dev": "react-scripts start",
+    "build": "react-scripts build",
+    "electron-build": "electron-builder"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "electron": "^22.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^4.9.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "wait-on": "^7.0.1",
+    "react-scripts": "5.0.1"
+  },
+  "keywords": [
+    "electron",
+    "file"
+  ],
+  "author": "Patrick Zhang",
+  "license": "MIT"
+}

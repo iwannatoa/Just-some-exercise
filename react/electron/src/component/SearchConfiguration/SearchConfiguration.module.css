@@ -1,0 +1,224 @@
+.section {
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+
+.section h2 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-bottom: 2px solid #9b59b6;
+  padding-bottom: 8px;
+}
+
+.searchConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.searchPaths {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.searchPaths h4 {
+  margin: 0 0 8px 0;
+  color: #34495e;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.searchPaths button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  align-self: flex-start;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(155, 89, 182, 0.3);
+}
+
+.searchPaths button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(155, 89, 182, 0.4);
+}
+
+.searchPaths button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pathList {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fafbfc;
+}
+
+.pathItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #ecf0f1;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.pathItem:hover {
+  background: #f8f9fa;
+}
+
+.pathItem:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.pathText {
+  font-size: 14px;
+  color: #2c3e50;
+  word-break: break-all;
+  flex: 1;
+  padding-right: 12px;
+}
+
+.removeBtn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.removeBtn:hover:not(:disabled) {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+.removeBtn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.matchConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.matchConfig label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.matchConfig input[type='range'] {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+}
+
+.matchConfig input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9b59b6;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.thresholdValue {
+  min-width: 50px;
+  text-align: center;
+  font-weight: bold;
+  color: #9b59b6;
+  font-size: 1.1rem;
+}
+
+.matchConfig small {
+  color: #7f8c8d;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.searchBtn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #27ae60, #229954);
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  align-self: flex-start;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
+}
+
+.searchBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(39, 174, 96, 0.4);
+  background: linear-gradient(135deg, #229954, #1e8449);
+}
+
+.searchBtn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.emptyState {
+  text-align: center;
+  color: #7f8c8d;
+  font-style: italic;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px dashed #bdc3c7;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
