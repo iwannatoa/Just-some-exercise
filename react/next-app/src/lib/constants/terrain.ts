@@ -35,3 +35,6 @@ export const TERRAIN_OUTLINES: { [key: string]: string } = {
   Plateau: '#8B6914',
   'Canyon Lands': '#8B6508',
 };
+
+
+

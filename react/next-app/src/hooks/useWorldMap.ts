@@ -36,7 +36,7 @@ export const useWorldMap = () => {
   );
 
   const getWorldStatistics = useCallback(() => {
-    if (!worldMap) return null;
+    if (!worldMap || worldMap.countries.size === 0) return null;
 
     const countries = Array.from(worldMap.countries.values());
     const totalCountries = countries.length;
