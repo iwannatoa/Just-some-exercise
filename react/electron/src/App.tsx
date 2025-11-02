@@ -8,6 +8,7 @@ import Results from './component/Results/Results';
 import FileSelection from './component/FileSelection/FileSelection';
 import SearchConfiguration from './component/SearchConfiguration/SearchConfiguration';
 import MoveConfiguration from './component/MoveConfiguration/MoveConfiguration';
+import { MatchedFolder, FileMoveResult, MoveConfig } from './types/file.type';
 
 // Main App Component
 const App: React.FC = () => {
@@ -35,6 +36,15 @@ const App: React.FC = () => {
       setSelectedFiles(files);
     } catch (error) {
       console.error('Error selecting files:', error);
+    }
+  }, []);
+
+  const handleSelectFolders = useCallback(async () => {
+    try {
+      const files = await window.electronAPI.selectFolders();
+      setSelectedFiles(files);
+    } catch (error) {
+      console.error('Error selecting folders:', error);
     }
   }, []);
 
@@ -79,6 +89,7 @@ const App: React.FC = () => {
     setSelectedTargetFolder('');
 
     try {
+      console.log(selectedFiles);
       const searchResults = await window.electronAPI.searchTargetFolders({
         sourceFiles: selectedFiles,
         searchPaths: searchPaths,
@@ -136,7 +147,7 @@ const App: React.FC = () => {
 
   // Move configuration
   const handleConfigChange = useCallback(
-    (key: keyof MoveConfig, value: any) => {
+    (key: keyof MoveConfig, value: string | boolean) => {
       setMoveConfig((prev) => ({
         ...prev,
         [key]: value,
@@ -183,15 +194,11 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.app}>
-      <header className={styles.appHeader}>
-        <h1>Smart File Mover</h1>
-        <p>Automatically match target folders and move files in batch</p>
-      </header>
-
       <div className={styles.appContent}>
         <FileSelection
           selectedFiles={selectedFiles}
           onSelectFiles={handleSelectFiles}
+          onSelectFolders={handleSelectFolders}
           isDisabled={isDisabled}
         />
 

@@ -5,6 +5,7 @@ declare global {
 }
 interface ElectronAPI {
   selectFiles: () => Promise<string[]>;
+  selectFolders: () => Promise<string[]>;
   selectFolder: () => Promise<string | null>;
   moveFiles: (config: {
     files: string[];

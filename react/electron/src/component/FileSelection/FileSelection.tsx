@@ -4,12 +4,14 @@ import styles from './FileSelection.module.css';
 interface FileSelectionProps {
   selectedFiles: string[];
   onSelectFiles: () => void;
+  onSelectFolders: () => void;
   isDisabled: boolean;
 }
 
 const FileSelection: React.FC<FileSelectionProps> = ({
   selectedFiles,
   onSelectFiles,
+  onSelectFolders,
   isDisabled,
 }) => {
   return (
@@ -23,6 +25,13 @@ const FileSelection: React.FC<FileSelectionProps> = ({
         >
           Select Files
         </button>
+        <button
+          className={styles.selectButton}
+          onClick={onSelectFolders}
+          disabled={isDisabled}
+        >
+          Select Folders
+        </button>
         <span className={styles.fileCount}>
           {selectedFiles.length} files selected
         </span>
@@ -33,7 +42,7 @@ const FileSelection: React.FC<FileSelectionProps> = ({
             key={index}
             className={styles.fileItem}
           >
-            {window.electronAPI.path.basename(file)}
+            {file}
           </div>
         ))}
         {selectedFiles.length === 0 && (

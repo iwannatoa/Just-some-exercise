@@ -6,13 +6,16 @@
   "private": true,
   "workspaces": [
     "react/simple-app",
-    "vue/simple-app"
+    "vue/simple-app",
+    "react/next-app"
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev -w react/simple-app\" \"npm run dev -w vue/simple-app\"",
     "dev:all": "npm run dev -w react/simple-app && npm run dev -w vue/simple-app",
     "dev:vue:simple": "npm run dev -w vue/simple-app",
     "dev:react:simple": "npm run dev -w react/simple-app",
+    "dev:react:next": "npm run dev -w react/next-app",
+    "dev:react:electron": "npm run dev -w react/electron",
     "build": "npm run build:react:simple && npm run build:vue:simple",
     "build:react:simple": "npm run build -w react/simple-app",
     "build:vue:simple": "npm run build -w vue/simple-app",

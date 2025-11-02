@@ -1,19 +1,19 @@
 // Types
-interface FileMoveResult {
+export interface FileMoveResult {
   file: string;
   destination?: string;
   success: boolean;
   error?: string;
 }
 
-interface MoveConfig {
+export interface MoveConfig {
   organizeBy: 'none' | 'date' | 'type';
   conflictResolution: 'rename' | 'overwrite' | 'skip';
   deleteOriginal: boolean;
   preserveStructure: boolean;
 }
 
-interface MatchedFolder {
+export interface MatchedFolder {
   name: string;
   path: string;
   matchScore: number;
@@ -21,7 +21,7 @@ interface MatchedFolder {
   searchPath: string;
 }
 
-interface ElectronAPI {
+export interface ElectronAPI {
   selectFiles: () => Promise<string[]>;
   selectFolder: () => Promise<string | null>;
   moveFiles: (config: {

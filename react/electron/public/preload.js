@@ -2,8 +2,9 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   // 文件选择
-  selectFiles: () => ipcRenderer.invoke('select-files'),
-  selectFolder: () => ipcRenderer.invoke('select-folder'),
+  selectFiles: () => ipcRenderer.invoke('select-files', {}),
+  selectFolders: () => ipcRenderer.invoke('select-folders', {}),
+  selectFolder: () => ipcRenderer.invoke('select-folder', {}),
 
   // 文件移动
   moveFiles: (config) => ipcRenderer.invoke('move-files', config),
@@ -15,8 +16,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // 工具函数
   path: {
-    basename: (path) => require('path').basename(path),
-    join: (...paths) => require('path').join(...paths),
+    basename: (path) => ipcRenderer.sendSync('path-basename', path),
+    join: (...paths) => ipcRenderer.sendSync('path-join', ...paths),
   },
 
   // 新增匹配搜索功能

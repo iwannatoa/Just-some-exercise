@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './MoveConfiguration.module.css';
+import { MoveConfig } from '../../types/file.type';
 
 interface MoveConfigurationProps {
   moveConfig: {
@@ -8,7 +9,7 @@ interface MoveConfigurationProps {
     deleteOriginal: boolean;
     preserveStructure: boolean;
   };
-  onConfigChange: (key: keyof MoveConfig, value: any) => void;
+  onConfigChange: (key: keyof MoveConfig, value: string | boolean) => void;
   isDisabled: boolean;
 }
 
