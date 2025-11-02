@@ -14,13 +14,49 @@
   border-bottom: 2px solid #9b59b6;
   padding-bottom: 8px;
 }
+/* 新增的header样式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-bottom: none;
+  padding-bottom: 0;
+  white-space: nowrap;
+}
+
+/* 新增的pathsHeader样式 */
+.pathsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pathsHeader h4 {
+  margin: 0;
+  color: #34495e;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+
 
 .searchConfig {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
-
 .searchPaths {
   display: flex;
   flex-direction: column;
@@ -171,18 +207,10 @@
   font-style: italic;
 }
 
+
 .searchBtn {
-  padding: 12px 28px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #27ae60, #229954);
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 700;
-  align-self: flex-start;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
+  align-self: auto;
+  margin: 0;
 }
 
 .searchBtn:hover:not(:disabled) {

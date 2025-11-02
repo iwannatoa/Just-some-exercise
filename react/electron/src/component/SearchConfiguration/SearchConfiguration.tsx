@@ -24,17 +24,36 @@ const SearchConfiguration: React.FC<SearchConfigurationProps> = ({
 }) => {
   return (
     <section className={styles.section}>
-      <h2>Auto Search Target Folders</h2>
+      <div className={styles.header}>
+        <h2>Auto Search Target Folders</h2>
+        <button
+          className={styles.searchBtn}
+          onClick={onSearchFolders}
+          disabled={isSearching || isDisabled || searchPaths.length === 0}
+        >
+          {isSearching ? (
+            <>
+              <span className={styles.spinner}></span>
+              Searching...
+            </>
+          ) : (
+            'Search Matching Folders'
+          )}
+        </button>
+      </div>
+
       <div className={styles.searchConfig}>
         <div className={styles.searchPaths}>
-          <h4>Search Paths:</h4>
-          <button
-            className={styles.addPathButton}
-            onClick={onAddSearchPath}
-            disabled={isSearching || isDisabled}
-          >
-            Add Search Path
-          </button>
+          <div className={styles.pathsHeader}>
+            <h4>Search Paths:</h4>
+            <button
+              className={styles.addPathButton}
+              onClick={onAddSearchPath}
+              disabled={isSearching || isDisabled}
+            >
+              Add Search Path
+            </button>
+          </div>
           <div className={styles.pathList}>
             {searchPaths.map((path, index) => (
               <div
@@ -79,21 +98,6 @@ const SearchConfiguration: React.FC<SearchConfigurationProps> = ({
           </label>
           <small>Higher threshold means stricter matching requirements</small>
         </div>
-
-        <button
-          className={styles.searchBtn}
-          onClick={onSearchFolders}
-          disabled={isSearching || isDisabled || searchPaths.length === 0}
-        >
-          {isSearching ? (
-            <>
-              <span className={styles.spinner}></span>
-              Searching...
-            </>
-          ) : (
-            'Search Matching Folders'
-          )}
-        </button>
       </div>
     </section>
   );

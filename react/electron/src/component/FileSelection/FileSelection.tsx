@@ -14,41 +14,38 @@ const FileSelection: React.FC<FileSelectionProps> = ({
   onSelectFolders,
   isDisabled,
 }) => {
+  // 修改后的组件部分
   return (
     <section className={styles.section}>
-      <h2>Select Files to Move</h2>
-      <div className={styles.fileSelection}>
-        <button
-          className={styles.selectButton}
-          onClick={onSelectFiles}
-          disabled={isDisabled}
-        >
-          Select Files
-        </button>
-        <button
-          className={styles.selectButton}
-          onClick={onSelectFolders}
-          disabled={isDisabled}
-        >
-          Select Folders
-        </button>
-        <span className={styles.fileCount}>
-          {selectedFiles.length} files selected
-        </span>
+      <div className={styles.header}>
+        <h2>Select Files to Move</h2>
+        <div className={styles.controls}>
+          <button
+            onClick={onSelectFiles}
+            disabled={isDisabled}
+          >
+            Select Files
+          </button>
+          <button
+            onClick={onSelectFolders}
+            disabled={isDisabled}
+          >
+            Select Folders
+          </button>
+          <span className={styles.count}>{selectedFiles.length} files</span>
+        </div>
       </div>
-      <div className={styles.fileList}>
+      <div className={styles.list}>
         {selectedFiles.map((file, index) => (
           <div
             key={index}
-            className={styles.fileItem}
+            className={styles.item}
           >
             {file}
           </div>
         ))}
         {selectedFiles.length === 0 && (
-          <div className={styles.emptyState}>
-            No files selected. Click "Select Files" to choose files to move.
-          </div>
+          <div className={styles.empty}>No files selected</div>
         )}
       </div>
     </section>
