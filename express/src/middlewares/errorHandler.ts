@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 export interface CustomError extends Error {
   statusCode?: number;
@@ -8,12 +8,12 @@ export interface CustomError extends Error {
 export const errorHandler = (
   err: CustomError,
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): void => {
   let error = { ...err };
   error.message = err.message;
 
+  console.error('Get error from req', req);
   // 记录错误
   console.error('错误详情:', err);
 

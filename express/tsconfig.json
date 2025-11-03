@@ -12,24 +12,23 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
-    "strictPropertyInitialization": false, // 允许类属性不初始化
+    "strictPropertyInitialization": false,
 
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
 
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./*"],
-      "@controllers/*": ["./controllers/*"],
-      "@models/*": ["./models/*"],
-      "@routes/*": ["./routes/*"],
-      "@middlewares/*": ["./middlewares/*"],
-      "@utils/*": ["./utils/*"],
-      "@config/*": ["./config/*"],
-      "@types/*": ["./types/*"]
+      "@/*": ["*"],
+      "@controllers/*": ["controllers/*"],
+      "@models/*": ["models/*"],
+      "@routes/*": ["routes/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@utils/*": ["utils/*"],
+      "@config/*": ["config/*"],
+      "@types/*": ["types/*"]
     },
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

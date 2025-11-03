@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -53,6 +53,7 @@ class App {
   private initializeRoutes(): void {
     // 健康检查
     this.app.get('/health', (req: Request, res: Response) => {
+      console.log('health check', req);
       res.status(200).json({
         status: 'OK',
         timestamp: new Date().toISOString(),

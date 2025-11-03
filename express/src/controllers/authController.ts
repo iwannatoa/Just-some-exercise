@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 export class AuthController {
   private readonly JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -122,11 +122,7 @@ export class AuthController {
     }
   };
 
-  public refreshToken = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  public refreshToken = async (req: Request, res: Response): Promise<void> => {
     try {
       const { refreshToken } = req.body;
 
@@ -177,6 +173,7 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> => {
     try {
+      console.log('logout req', req);
       // 在实际应用中，这里可能会将令牌加入黑名单
       res.status(200).json({
         success: true,

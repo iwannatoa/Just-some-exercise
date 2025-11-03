@@ -1,4 +1,3 @@
-import 'tsconfig-paths/register';
 import App from './app';
 
 // 创建应用实例并启动

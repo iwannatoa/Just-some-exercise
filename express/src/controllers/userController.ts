@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
 
 export class UserController {
@@ -6,6 +7,7 @@ export class UserController {
     res: Response,
     next: NextFunction
   ): Promise<void> => {
+    console.log('req', req);
     try {
       // 模拟从数据库获取用户
       const users = [
@@ -64,6 +66,7 @@ export class UserController {
         email,
         role: 'user',
         createdAt: new Date().toISOString(),
+        password: await bcrypt.hash(password, 12),
       };
 
       res.status(201).json({
