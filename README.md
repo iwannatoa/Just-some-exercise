@@ -99,9 +99,9 @@ After starting development servers:
 - Vue App: http://localhost:5173
 
 ## Future Plan
-- [ ] Electron
-- [ ] express
-- [ ] flutter
+- [x] Electron
+- [x] express
+- [ ] ~~flutter~~
 
 ## License
 
