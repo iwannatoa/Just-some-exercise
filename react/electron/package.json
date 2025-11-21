@@ -1,0 +1,66 @@
+{
+  "name": "bulk-file-configurable-move",
+  "version": "0.0.1",
+  "description": "Move multi file to separate dir",
+  "main": "public/electron.js",
+  "scripts": {
+    "start": "electron . --dev",
+    "dev": "concurrently \"npm run react-dev\" \"wait-on http://localhost:3000 && electron . -d\"",
+    "react-dev": "vite",
+    "build": "vite build",
+    "electron-build": "npm run build && electron-builder",
+    "electron-build:portable": "electron-builder --win portable --x64",
+    "exe:logging": "cd dist && \"bulk-file-configurable-move 0.0.1.exe\" --enable-logging --log-level=0 --trace-logging"
+  },
+  "dependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.9.0"
+  },
+  "devDependencies": {
+    "@types/css-modules": "^1.0.5",
+    "@types/node": "^24.9.2",
+    "@types/webpack-env": "^1.18.8",
+    "@vitejs/plugin-react": "^5.1.0",
+    "concurrently": "^7.6.0",
+    "css-loader": "^7.1.2",
+    "electron": "^22.0.0",
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1",
+    "style-loader": "^4.0.0",
+    "vite": "^7.1.12",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "io.iwannatoa.file-move",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "public/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist"
+    }
+  },
+  "keywords": [
+    "electron",
+    "file"
+  ],
+  "author": "Patrick Zhang",
+  "license": "MIT",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
