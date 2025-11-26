@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface SpinnerProcessProps {
   value: number;
 }
@@ -7,14 +9,7 @@ function SpinnerProcess({ value }: SpinnerProcessProps) {
     <div className='relative w-6 h-6'>
       <svg className='w-6 h-6' viewBox='0 0 36 36'>
         {/* Background circle */}
-        <circle
-          cx='18'
-          cy='18'
-          r='15.9155'
-          fill='none'
-          stroke='#e5e7eb'
-          strokeWidth='2'
-        />
+        <circle cx='18' cy='18' r='15.9155' fill='none' stroke='#e5e7eb' strokeWidth='2' />
         {/* Progress arc */}
         <circle
           cx='18'
@@ -38,4 +33,4 @@ function SpinnerProcess({ value }: SpinnerProcessProps) {
   );
 }
 
-export default SpinnerProcess;
+export default React.memo(SpinnerProcess);

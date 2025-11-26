@@ -1,3 +1,4 @@
+import React from 'react';
 import type { CustomerStatus, TableStatus } from '../store/data.type';
 
 interface CustomerStatusIconProps {
@@ -11,72 +12,51 @@ interface TableStatusIconProps {
   className?: string;
 }
 type StatusIconProps = CustomerStatusIconProps | TableStatusIconProps;
-export default function StatusIcon({
-  type,
-  status,
-  className = '',
-}: StatusIconProps) {
+export default function StatusIcon({ type, status, className = '' }: StatusIconProps) {
   if (type === 'CUSTOMER') {
     return (
       <div className={`${className} w-5 h-5`} title={status}>
-        {getCustomerStatusIcon(status)}
+        <CustomerStatusIcon status={status} />
       </div>
     );
   } else {
     return (
       <div className={`${className} w-5 h-5`} title={status}>
-        {getTableStatusIcon(status)}
+        <TableStatusIcon status={status} />
       </div>
     );
   }
 }
 
 // Function to get icon for CustomerStatus
-export const getCustomerStatusIcon = (status: CustomerStatus) => {
+export const CustomerStatusIcon = React.memo(({ status }: { status: CustomerStatus }) => {
   switch (status) {
     case 'WAITING_TABLE':
       return (
-        <svg
-          className='waiting-icon w-full h-full'
-          viewBox='0 0 20 20'
-          fill='currentColor'
-        >
+        <svg className='waiting-icon w-full h-full' viewBox='0 0 20 20' fill='currentColor'>
           <path
-            fill-rule='evenodd'
+            fillRule='evenodd'
             d='M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z'
-            clip-rule='evenodd'
+            clipRule='evenodd'
           />
         </svg>
       );
     case 'ORDERING':
       return (
-        <svg
-          className='ordering-icon w-full h-full'
-          viewBox='0 0 20 20'
-          fill='currentColor'
-        >
+        <svg className='ordering-icon w-full h-full' viewBox='0 0 20 20' fill='currentColor'>
           <path d='M9 2a1 1 0 000 2h2a1 1 0 100-2H9z' />
           <path
-            fill-rule='evenodd'
+            fillRule='evenodd'
             d='M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z'
-            clip-rule='evenodd'
+            clipRule='evenodd'
           />
         </svg>
       );
     case 'HAVING_MEAL':
       return (
-        <svg
-          fill='currentColor'
-          viewBox='0 -20.55 122.88 122.88'
-          version='1.1'
-          id='Layer_1'
-        >
-          <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
-          <g
-            id='SVGRepo_tracerCarrier'
-            stroke-linecap='round'
-            stroke-linejoin='round'
-          ></g>
+        <svg fill='currentColor' viewBox='0 -20.55 122.88 122.88' version='1.1' id='Layer_1'>
+          <g id='SVGRepo_bgCarrier' strokeWidth='0'></g>
+          <g id='SVGRepo_tracerCarrier' strokeLinecap='round' strokeLinejoin='round'></g>
           <g id='SVGRepo_iconCarrier'>
             <g>
               <path d='M18,33.84c3.46-2.36,5.2-5.45,4.9-12.52V3.14c-0.03-2.54-4.64-2.85-4.87,0l-0.18,14.75 c-0.01,2.76-4.16,2.85-4.15,0l0.18-15.25c-0.05-2.73-4.45-3-4.51,0c0,4.23-0.18,11.02-0.18,15.25c0.22,2.67-3.63,3.02-3.53,0 L5.85,2.73c-0.1-2.06-2.36-2.79-3.9-1.83C0.31,1.95,0.64,4.05,0.57,5.82L0,23.22c0.09,5.06,1.42,9.17,5.38,10.92 c0.6,0.26,1.44,0.47,2.41,0.62L6.42,77.18c-0.08,2.52,1.98,4.57,4.39,4.57h0.55c2.72,0,5.01-2.32,4.94-5.15l-1.2-41.86 C16.36,34.54,17.41,34.25,18,33.84L18,33.84L18,33.84z M113.36,44.66h1.48c0,10.83-0.04,23.34-0.39,34.12 c-0.15,4.13,7.59,3.97,7.45-0.43l-0.29-33.69h1.27V0C106.9,2.45,112.41,33.39,113.36,44.66L113.36,44.66z M105.56,41.11 c0,10.91-3.84,20.22-11.52,27.91c-7.7,7.7-17,11.55-27.91,11.55c-10.86,0-20.17-3.84-27.88-11.55c-7.7-7.69-11.57-17-11.57-27.91 c0-10.88,3.86-20.15,11.57-27.86c7.73-7.7,17.02-11.57,27.88-11.57c10.91,0,20.21,3.86,27.91,11.57 C101.71,20.95,105.56,30.23,105.56,41.11L105.56,41.11z M89.09,41.07c0,6.36-2.23,11.78-6.73,16.28 c-4.48,4.48-9.91,6.73-16.26,6.73c-6.31,0-11.73-2.25-16.22-6.73c-4.49-4.5-6.73-9.92-6.73-16.28c0-6.31,2.24-11.73,6.73-16.21 c4.5-4.48,9.91-6.73,16.22-6.73C78.86,18.15,89.09,28.29,89.09,41.07L89.09,41.07z M86.19,21.06c-5.53-5.53-12.23-8.28-20.09-8.28 c-7.84,0-14.52,2.75-20.01,8.28c-5.53,5.53-8.31,12.21-8.31,20.01c0,7.83,2.78,14.5,8.31,20.06c5.5,5.54,12.17,8.32,20.01,8.32 c7.85,0,14.55-2.78,20.09-8.32c5.51-5.55,8.28-12.23,8.28-20.06C94.47,33.26,91.71,26.59,86.19,21.06L86.19,21.06z'></path>{' '}
@@ -86,15 +66,11 @@ export const getCustomerStatusIcon = (status: CustomerStatus) => {
       );
     case 'FINISHED':
       return (
-        <svg
-          className='finished-icon w-full h-full'
-          viewBox='0 0 20 20'
-          fill='currentColor'
-        >
+        <svg className='finished-icon w-full h-full' viewBox='0 0 20 20' fill='currentColor'>
           <path
-            fill-rule='evenodd'
+            fillRule='evenodd'
             d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-            clip-rule='evenodd'
+            clipRule='evenodd'
           />
         </svg>
       );
@@ -102,17 +78,17 @@ export const getCustomerStatusIcon = (status: CustomerStatus) => {
       return (
         <svg fill='currentColor' viewBox='0 0 20 20'>
           <path
-            fill-rule='evenodd'
+            fillRule='evenodd'
             d='M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z'
-            clip-rule='evenodd'
+            clipRule='evenodd'
           />
         </svg>
       );
   }
-};
+});
 
 // Function to get icon for TableStatus
-export const getTableStatusIcon = (status: TableStatus) => {
+export const TableStatusIcon = React.memo(({ status }: { status: TableStatus }) => {
   switch (status) {
     case 'EMPTY':
       return (
@@ -146,4 +122,4 @@ export const getTableStatusIcon = (status: TableStatus) => {
         </svg>
       );
   }
-};
+});

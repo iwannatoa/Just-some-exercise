@@ -1,26 +1,14 @@
-/*
- * Copyright © 2016-2025 Patrick Zhang.
- * All Rights Reserved.
- */
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-  type FC,
-} from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type FC } from 'react';
 import { getData } from './data';
 import type { EChartsOption, ToolboxComponentOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import type { KeyValueData, pageStatusType } from './reports.type';
+import VirtualListDetail from './VirtualListDetail';
+import LazyLoadDetail from './LazyLoadDetail';
+import React from 'react';
 
 const ReportHome: FC<ReportHomeBean> = prop => {
-  const updateGridOptions = (
-    options: EChartsOption,
-    data: KeyValueData,
-  ): EChartsOption => {
+  const updateGridOptions = (prevOptions: EChartsOption, data: KeyValueData): EChartsOption => {
     const series = data.categories.map(type => {
       return {
         type: 'line',
@@ -33,7 +21,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
       };
     }) as any;
     return {
-      ...options,
+      ...prevOptions,
       dataset: {
         source: data.data,
       },
@@ -41,7 +29,6 @@ const ReportHome: FC<ReportHomeBean> = prop => {
     };
   };
   const [pageStatus, setPageStatus] = useState<pageStatusType>('Loading');
-  const fullData = useRef({} as KeyValueData);
   const [gridOptions, setGridOptions] = useReducer(updateGridOptions, {
     legend: {},
     tooltip: {
@@ -66,13 +53,20 @@ const ReportHome: FC<ReportHomeBean> = prop => {
       },
     } as ToolboxComponentOption,
   } as EChartsOption);
+  const current = new Date();
+  const [endTime] = useState<Date>(new Date());
+  const [startTime] = useState<Date>(new Date(current.setFullYear(current.getFullYear() - 1)));
+  const chartRef = useRef<ReactECharts>(null);
+  const fullData = useRef({} as KeyValueData);
   const [data, setData] = useReducer(
-    (_, { start, end }) => {
+    (_, { start, end }: { start: number; end: number }) => {
+      if (!start || !end) {
+        start = startTime.getTime();
+        end = endTime.getTime();
+      }
       const result = {
         categories: fullData.current.categories,
-        data: fullData.current.data.filter(
-          item => item.time >= start && item.time <= end,
-        ),
+        data: fullData.current.data.filter(item => item.time >= start && item.time <= end),
       };
       return result;
     },
@@ -82,42 +76,27 @@ const ReportHome: FC<ReportHomeBean> = prop => {
     } as KeyValueData,
   );
 
-  const end = new Date();
-  const start = new Date();
-  start.setFullYear(start.getFullYear() - 1);
+  React.captureOwnerStack;
+
   const handleDataZoom = useCallback((event: any) => {
-    if (event.batch) {
-      const val = event.batch[event.batch.length - 1];
-      if (val.startValue && val.endValue) {
-        setData({ start: val.startValue, end: val.endValue });
-      } else {
-        setData({ start: start.getTime(), end: end.getTime() });
-      }
-    }
+    const option = chartRef.current?.getEchartsInstance().getOption();
+    if (!option) return;
+    const val = (option.dataZoom as [{ startValue: number; endValue: number }])[0];
+    setData({ start: val.startValue, end: val.endValue });
   }, []);
+
   const eventDict: Record<string, Function> = {
     dataZoom: handleDataZoom,
   };
-  const memorized = useMemo(() => {
-    return (
-      <ReactECharts
-        className='flex-none'
-        option={gridOptions}
-        lazyUpdate={true}
-        showLoading={pageStatus === 'Loading'}
-        onEvents={eventDict}
-      />
-    );
-  }, [gridOptions, pageStatus, eventDict]);
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
-    getData(start, end, 100)
+    getData(startTime, endTime, 1000)
       .then(data => {
         if (!isMounted.current) return;
+        setData({ start: startTime.getTime(), end: endTime.getTime() });
         setGridOptions(data);
         fullData.current = data;
-        setData({ start, end });
         setPageStatus('Success');
       })
       .catch(() => {
@@ -129,37 +108,17 @@ const ReportHome: FC<ReportHomeBean> = prop => {
   }, []);
 
   return (
-    <div className='h-full flex flex-col p-4 min-h-0'>
-      <h1 className='flex-none'>Here we come</h1>
-      {memorized}
-      <div className='flex flex-row'>
-        {(data.data.length > 0 && (
-          <table className='flex-1 text-center bg-gray-50 min-h-0 overflow-auto'>
-            <thead>
-              <tr
-                key='header'
-                className='bg-gray-200 shadow-2xl shadow-gray-300'
-              >
-                <th key='time'>Time</th>
-                {data.categories.map(type => (
-                  <th key={type}>{type}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.map((row, i) => (
-                <tr key={i}>
-                  <td key={`${i}_time`}>{new Date(row.time).toDateString()}</td>
-                  {data.categories.map(type => (
-                    <td key={`${i}_${type}`}>{row[type]}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )) ||
-          (pageStatus === 'Failed' && <div>Load data failed</div>)}
-      </div>
+    <div className='h-full flex flex-col p-4 min-h-0 space-y-4'>
+      <ReactECharts
+        ref={chartRef}
+        className='flex-none rounded-lg shadow-md border border-gray-200 bg-white'
+        option={gridOptions}
+        lazyUpdate={true}
+        showLoading={pageStatus === 'Loading'}
+        onEvents={eventDict}
+      />
+      {/* <VirtualListDetail data={data} status={pageStatus}></VirtualListDetail> */}
+      <LazyLoadDetail data={data} status={pageStatus} />
     </div>
   );
 };
