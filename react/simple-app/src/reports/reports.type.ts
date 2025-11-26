@@ -15,6 +15,7 @@ export interface KeyValueData<T extends string = string> {
 export type GridData = (number | string)[][];
 export type LanguageValue = {
   time: number;
+  formattedTime?: string;
 } & Record<string, number>;
 
 export type pageStatusType = 'Loading' | 'Success' | 'Failed';
