@@ -3,11 +3,16 @@ const SEP = '-';
 class IdFactory {
   private static _instance: IdFactory | null = null;
   private counters: Record<string, number> = {};
+  static readonly #INSTANCE_KEY = Symbol('IdFactory');
 
-  private constructor() {}
+  private constructor(key: symbol) {
+    if (key !== IdFactory.#INSTANCE_KEY || new.target !== IdFactory) {
+      throw new Error('Use IdFactory.getInstance() instead of new.');
+    }
+  }
 
   static getInstance(): IdFactory {
-    if (!this._instance) this._instance = new IdFactory();
+    if (!this._instance) this._instance = new IdFactory(this.#INSTANCE_KEY);
     return this._instance;
   }
 

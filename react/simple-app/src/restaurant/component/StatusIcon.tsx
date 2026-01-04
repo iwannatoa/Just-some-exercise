@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import type { CustomerStatus, TableStatus } from '../store/data.type';
 
 interface CustomerStatusIconProps {
@@ -12,21 +12,50 @@ interface TableStatusIconProps {
   className?: string;
 }
 type StatusIconProps = CustomerStatusIconProps | TableStatusIconProps;
-export default function StatusIcon({ type, status, className = '' }: StatusIconProps) {
+const StatusIcon = React.memo(({ type, status }: StatusIconProps) => {
+  const getTableClasses = useCallback((status: TableStatus): string => {
+    const base = 'w-5 h-5';
+    switch (status) {
+      case 'WAITING_FOR_ORDER':
+        return `${base} text-yellow-500`;
+      case 'HAVING_MEAL':
+        return `${base} text-green-500`;
+      case 'EMPTY':
+        return `${base} text-gray-400`;
+      case 'WAITING_FOR_CLEAN':
+        return `${base} text-orange-500`;
+      default:
+        return `${base} text-gray-500`;
+    }
+  }, []);
+
+  const getCustomerClass = useCallback((status: CustomerStatus): string => {
+    const base = 'w-5 h-5';
+    switch (status) {
+      case 'ORDERING':
+        return `${base} bg-yellow-100 text-yellow-800`;
+      case 'HAVING_MEAL':
+        return `${base} bg-emerald-100 text-emerald-800`;
+      case 'FINISHED':
+        return `${base} bg-pink-100 text-pink-800`;
+      case 'WAITING_TABLE':
+        return `${base} bg-gray-100 text-gray-700`;
+    }
+  }, []);
   if (type === 'CUSTOMER') {
     return (
-      <div className={`${className} w-5 h-5`} title={status}>
+      <div className={getCustomerClass(status)} title={status}>
         <CustomerStatusIcon status={status} />
       </div>
     );
   } else {
     return (
-      <div className={`${className} w-5 h-5`} title={status}>
+      <div className={getTableClasses(status)} title={status}>
         <TableStatusIcon status={status} />
       </div>
     );
   }
-}
+});
 
 // Function to get icon for CustomerStatus
 export const CustomerStatusIcon = React.memo(({ status }: { status: CustomerStatus }) => {
@@ -123,3 +152,5 @@ export const TableStatusIcon = React.memo(({ status }: { status: TableStatus }) 
       );
   }
 });
+
+export default StatusIcon;

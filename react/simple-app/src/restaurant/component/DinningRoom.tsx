@@ -14,8 +14,8 @@ export default function DiningRoom() {
     table => table.status === 'EMPTY',
   ).length;
   return (
-    <div className='flex-3 border-2 p-3 overflow-auto border-fuchsia-500 bg-gradient-to-b from-white to-gray-50 rounded-lg shadow-sm'>
-      <div className='flex items-center justify-between mb-3'>
+    <div className='flex flex-col overflow-auto flex-3 border-2 p-3 border-fuchsia-500 bg-gradient-to-b from-white to-gray-50 rounded-lg shadow-sm'>
+      <div className='flex flex-none items-center justify-between mb-3'>
         <div>
           <h2 className='text-base font-semibold text-gray-800'>Dining Room</h2>
           <div className='flex items-center gap-2 mt-1'>
@@ -42,7 +42,7 @@ export default function DiningRoom() {
         </div>
       </div>
 
-      <div>
+      <div className='overflow-auto flex-1'>
         {tableList.length > 0 ? (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 overflow-y-auto'>
             {tableList.map((table, index) => (

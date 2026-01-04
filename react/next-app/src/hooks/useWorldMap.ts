@@ -9,21 +9,28 @@ export const useWorldMap = () => {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const generateWorld = useCallback(async (countryCount: number = 25) => {
-    setIsLoading(true);
+  const generateWorld = useCallback(
+    async (
+      countryCount: number = 25,
+      width: number = 400,
+      height: number = 300
+    ) => {
+      setIsLoading(true);
 
-    // Simulate async operation (could be actual API call in future)
-    await new Promise((resolve) => setTimeout(resolve, 100));
+      // Simulate async operation (could be actual API call in future)
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const generator = new WorldGenerator();
-    const newWorld = generator.generateWorld(countryCount);
+      const generator = new WorldGenerator(width, height);
+      const newWorld = generator.generateWorld(countryCount);
 
-    setWorldMap(newWorld);
-    setSelectedCountry(null);
-    setIsLoading(false);
+      setWorldMap(newWorld);
+      setSelectedCountry(null);
+      setIsLoading(false);
 
-    return newWorld;
-  }, []);
+      return newWorld;
+    },
+    []
+  );
 
   const selectCountry = useCallback(
     (countryName: string) => {

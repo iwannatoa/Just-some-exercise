@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type FC } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useReducer, useRef, useState, type FC } from 'react';
 import { getData } from './data';
 import type { EChartsOption, ToolboxComponentOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
@@ -89,6 +89,7 @@ const ReportHome: FC<ReportHomeBean> = prop => {
     dataZoom: handleDataZoom,
   };
   const isMounted = useRef(false);
+
   useEffect(() => {
     isMounted.current = true;
     getData(startTime, endTime, 1000)

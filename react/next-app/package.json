@@ -9,12 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@turf/turf": "^7.3.1",
+    "color": "^5.0.3",
     "d3": "^7.9.0",
+    "d3-array": "^3.2.4",
+    "d3-delaunay": "^6.0.4",
+    "d3-polygon": "^3.0.1",
     "delaunator": "^5.0.1",
+    "martinez-polygon-clipping": "^0.8.1",
     "next": "^15.3.5",
+    "point-in-polygon": "^1.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "simple-statistics": "^7.8.8",
+    "simplify-js": "^1.2.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -26,7 +26,6 @@ const LazyLoadDetail: React.FC<DetailProps> = (prop: DetailProps) => {
   const pageStatus = prop.status;
 
   const [visibleRows, setVisibleRows] = useState(20);
-  const loadMoreRef = useRef(null);
   const step = 20;
   const processedData = useMemo(
     () =>
@@ -37,9 +36,11 @@ const LazyLoadDetail: React.FC<DetailProps> = (prop: DetailProps) => {
     [data.data],
   );
   const memoizedCategories = useMemo(() => data.categories, [data.categories]);
+  const loadMoreRef = useRef(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    observerRef.current = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && visibleRows < data.data.length) {
           setVisibleRows(prev => Math.min(prev + step, data.data.length));
@@ -50,12 +51,18 @@ const LazyLoadDetail: React.FC<DetailProps> = (prop: DetailProps) => {
       },
     );
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+    return () => observerRef.current?.disconnect();
+  }, [loadMoreRef.current]);
+
+  useEffect(() => {
+    if (loadMoreRef.current && observerRef.current) {
+      observerRef.current.observe(loadMoreRef.current);
     }
 
-    return () => observer.disconnect();
-  }, [visibleRows, data.data]);
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, [loadMoreRef.current]);
 
   const visibleData = useMemo(() => {
     return processedData.slice(0, visibleRows);

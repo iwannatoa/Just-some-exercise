@@ -20,10 +20,12 @@ export default function MapPage() {
 
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [countryCount, setCountryCount] = useState(25);
+  const [mapWidth, setMapWidth] = useState(400);
+  const [mapHeight, setMapHeight] = useState(300);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
 
   const handleGenerateWorld = async () => {
-    await generateWorld(countryCount);
+    await generateWorld(countryCount, mapWidth, mapHeight);
   };
 
   const statistics = getWorldStatistics();
@@ -37,6 +39,10 @@ export default function MapPage() {
       <MapControls
         countryCount={countryCount}
         onCountryCountChange={setCountryCount}
+        mapWidth={mapWidth}
+        onMapWidthChange={setMapWidth}
+        mapHeight={mapHeight}
+        onMapHeightChange={setMapHeight}
         onGenerate={handleGenerateWorld}
         isLoading={isLoading}
       />

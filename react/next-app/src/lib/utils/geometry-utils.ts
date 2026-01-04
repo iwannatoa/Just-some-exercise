@@ -1,4 +1,6 @@
 import { Land, Point } from '../types/map';
+// @ts-ignore - point-in-polygon doesn't have types
+import pointInPolygon from 'point-in-polygon';
 
 // 判断两个多边形是否相交
 export const doPolygonsIntersect = (poly1: Land, poly2: Land): boolean => {
@@ -127,25 +129,12 @@ const isSeparatingAxis = (verticesA: Point[], verticesB: Point[]): boolean => {
   return false;
 };
 
-// 判断点是否在多边形内（射线法）
-const isPointInPolygon = (point: Point, polygon: Point[]): boolean => {
-  let inside = false;
-  const count = polygon.length;
-
-  for (let i = 0, j = count - 1; i < count; j = i++) {
-    const xi = polygon[i].x;
-    const yi = polygon[i].y;
-    const xj = polygon[j].x;
-    const yj = polygon[j].y;
-
-    const intersect =
-      yi > point.y !== yj > point.y &&
-      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
-
-    if (intersect) inside = !inside;
-  }
-
-  return inside;
+// 判断点是否在多边形内（使用 point-in-polygon 库）
+export const isPointInPolygon = (point: Point, polygon: Point[]): boolean => {
+  return pointInPolygon(
+    [point.x, point.y],
+    polygon.map((p) => [p.x, p.y])
+  );
 };
 
 // 判断两个点是否相等（在容差范围内）
