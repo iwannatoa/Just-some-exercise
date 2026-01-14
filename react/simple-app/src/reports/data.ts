@@ -24,14 +24,10 @@ export function getData(startDate: Date, endDate: Date, count = 100) {
     }
     data.data.push(pre);
   }
-  return delayPromise<KeyValueData>(2000, data);
+  return delayPromise(1000, data);
 }
 
-function delayPromise<T>(
-  time: number,
-  value: T,
-  shouldReject = false,
-): Promise<T> {
+function delayPromise<T>(time: number, value: T, shouldReject = false): Promise<T> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       shouldReject ? reject(new Error('Rejected')) : resolve(value);

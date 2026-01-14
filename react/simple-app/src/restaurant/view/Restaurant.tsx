@@ -39,7 +39,6 @@ export default function Restaurant() {
   };
 
   useEffect(() => {
-    console.log('useEffect');
     const data = getInitData();
     data.forEach(item => {
       const menuId = menuStore.add({

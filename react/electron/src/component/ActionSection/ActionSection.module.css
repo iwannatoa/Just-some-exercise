@@ -1,0 +1,48 @@
+.section {
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.actionSection {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+  border: 2px dashed #bdc3c7 !important;
+}
+
+.moveBtn {
+  padding: 16px 40px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 200px;
+}
+
+.moveBtn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+  background: linear-gradient(135deg, #c0392b, #a93226);
+}
+
+.moveBtn:active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.moveBtn:disabled {
+  background: #bdc3c7 !important;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  color: #7f8c8d;
+}
